@@ -3,27 +3,157 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/default">
+<!--      xmlns:sec="http://www.w3.org/1999/xhtml">-->
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/monokai-sublime.min.css"/>
+</head>
+<style>
+    .background {
+        position: center;
+    }
+    .background::before {
+        content: "";
+        background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');
+        background-size: cover;
+        background-repeat: repeat-y;
+        position: absolute;
+        top: 62px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        opacity: 0.1;
+    }
+    .content {
+        position: relative;
+        text-align: center;
+    }
+    .table {
+        width: 100%;
+        margin: auto;
+    }
+    html {
+        position: relative;
+        min-height: 100%;
+        padding-bottom: 0px;
+    }
+    body {
+        margin-bottom: 0px;
+    }
+    .form-center {
+        display:flex;
+        justify-content: center;
+    }
+</style>
+<body>
+<header>
+    <div>
+        <nav th:replace="fragments/navbar"></nav>
+    </div>
+</header>
 
-<div id="page" layout:fragment="content">
-    <div class="container">
-        <div class="mt-5">
+<div th:replace="fragments/scripts"></div>
+
+<div class="background">
+    <div class="content">
+        <div id="page" layout:fragment="content">
             <div class="container">
-                <div class="row align-items-center profile-header">
-                    <div class="col-md-2 mb-3">
-                        <img th:src="${profile.get('picture')}" class="rounded-circle img-fluid profile-picture"/>
-                    </div>
-                    <div class="col-md text-center text-md-left">
-                        <h2 th:text="${profile.get('name')}"/>
-                        <p class="lead text-muted" th:text="${profile.get('email')}"/>
-                    </div>
-                </div>
+                <div class="mt-5">
+                    <div class="container">
+<!--                        <div class="row align-items-center profile-header">-->
+<!--                            <div class="col-md-2 mb-3">-->
+<!--                                <img th:src="${profile.get('picture')}" class="rounded-circle img-fluid profile-picture"/>-->
+<!--                            </div>-->
+<!--                            <div class="col-md text-center text-md-left">-->
+<!--                                <h2 th:text="${profile.get('name')}"/>-->
+<!--                                <p class="lead text-muted" th:text="${profile.get('email')}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
-                <div class="row">
-                    <pre class="rounded"><code class="json" id="profileJsonEl" th:text="${profileJson}"></code></pre>
+                        <div class="form-center">
+                            <div class="table-responsive" style="position: relative; margin-top: 50px; margin-left: 50px; margin-right: 50px;">
+                                <table class="table table-bordered table-striped table-dark w-auto">
+                                    <thead style="text-align: center">
+                                    <tr style="background-color: #0660a9">
+                                        <th colspan="15">
+                                            <h1> User Details </h1>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <form method="POST" class="form-signin" style="text-align: center" th:object="${userForm}" th:action="@{/profile}">
+                                            <tr>
+                                                <th style="font-size: 20px;">
+                                                    <i class="fas fa-user"></i>
+                                                    First Name
+                                                </th>
+                                                <th class="form-group" style="width: 250px">
+                                                    <input type="text" th:field="*{first_name}" class="form-control"
+                                                           th:placeholder="*{first_name}" autofocus="true" required>
+        <!--                                            <span class="has-error" th:if="${#fields.hasErrors('first_name')}" th:errors="*{first_name}"></span>-->
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 20px;">
+                                                    <i class="fas fa-user"></i>
+                                                    Last Name
+                                                </th>
+                                                <th class="form-group" style="width: 250px">
+                                                    <input type="text" th:field="*{last_name}" class="form-control"
+                                                           th:placeholder="*{last_name}" autofocus="true" required>
+        <!--                                        <span class="has-error" th:if="${#fields.hasErrors('last_name')}" th:errors="*{last_name}"></span>-->
+                                                </th>
+                                            </tr>
+        <!--                                <tr>-->
+        <!--                                    <th style="font-size: 20px;">-->
+        <!--                                        <i class="fas fa-envelope"></i>-->
+        <!--                                        E-mail-->
+        <!--                                    </th>-->
+        <!--                                    <th class="form-group" style="width: 250px">-->
+        <!--                                        <input type="text" th:field="*{email}" class="form-control"-->
+        <!--                                               th:placeholder="*{email}" autofocus="true" required>-->
+        <!--                                        <span class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>-->
+        <!--                                    </th>-->
+        <!--                                </tr>-->
+                                            <tr>
+                                                <th style="font-size: 20px;">
+                                                    <i class="fas fa-phone"></i>
+                                                    Phone
+                                                </th>
+                                                <th class="form-group" style="width: 250px">
+                                                    <input type="text" th:field="*{phone}" class="form-control"
+                                                           th:placeholder="*{phone}" autofocus="true" required>
+        <!--                                        <span class="has-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>-->
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 20px">
+                                                    <i class="fas fa-chevron-circle-down"></i>
+                                                    Action
+                                                </th>
+                                                <th style="width: 250px">
+                                                    <button class="btn btn-primary" type="submit" style="width: 70px;">Submit</button>
+                                                </th>
+                                            </tr>
+                                        </form>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+        <!--                <div class="row">-->
+        <!--                    <pre class="rounded"><code class="json" id="profileJsonEl" th:text="${profileJson}"></code></pre>-->
+        <!--                </div>-->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</body>
 
 </html>

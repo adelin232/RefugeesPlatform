@@ -49,12 +49,15 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-left">
                             <!-- Show the user's full name from the id token here -->
-                            <div class="dropdown-header" th:text="${profile.get('name')}"></div>
+                            <div class="dropdown-header" th:text="${userForm.full_name}"></div>
                             <a href="/profile" class="dropdown-item dropdown-profile">
                                 <i class="fas fa-user mr-3"></i> Profile
                             </a>
-                            <a href="/users" class="dropdown-item dropdown-profile">
-                                <i class="fas fa-user mr-3"></i> Users
+<!--                            <a href="/users" class="dropdown-item dropdown-profile">-->
+<!--                                <i class="fas fa-user mr-3"></i> Users-->
+<!--                            </a>-->
+                            <a href="/rooms" class="dropdown-item dropdown-profile">
+                                <i class="fas fa-hotel mr-3"></i> Rooms
                             </a>
                             <a id="qsLogoutBtn" th:href="@{/logout}" class="dropdown-item">
                                 <i class="fas fa-power-off mr-3"></i> Log out
@@ -78,14 +81,21 @@
                         <!-- Profile image should be set to the profile picture from the id token -->
                             <img th:src="${profile.get('picture')}" alt="Profile picture" class="nav-user-profile d-inline-bloc rounded-circle mr-3" width="50"/>
                             <!-- Show the user's full name from the id token here-->
-                            <h6 class="d-inline-block" th:text="${profile.get('name')}"></h6>
+                            <h6 class="d-inline-block" th:text="${userForm.full_name}"></h6>
                         </span>
                     </li>
                     <li>
                         <i class="fas fa-user mr-3"></i>
                         <a th:href="@{/profile}"> Profile</a>
                     </li>
-
+<!--                    <li>-->
+<!--                        <i class="fas fa-user mr-3"></i>-->
+<!--                        <a th:href="@{/users}"> Users</a>-->
+<!--                    </li>-->
+                    <li>
+                        <i class="fas fa-hotel mr-3"></i>
+                        <a th:href="@{/rooms}"> Rooms</a>
+                    </li>
                     <li>
                         <i class="fas fa-power-off mr-3"></i>
                         <a th:href="@{/logout}"> Log out</a>

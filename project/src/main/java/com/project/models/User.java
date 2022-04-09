@@ -26,4 +26,9 @@ public class User {
     private String first_name;
 
     private String last_name;
+
+    private String full_name;
+
+//    @OneToMany(mappedBy = "user")
+//    private List<Room> rooms;
 }
