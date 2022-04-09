@@ -1,6 +1,7 @@
-version: "3.8"
+version: "3.7"
 services:
   mysqldb:
+    container_name: mysqldb
     build: ./mysql
     restart: unless-stopped
     env_file: ./.env
@@ -11,7 +12,23 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - db:/var/lib/mysql
+  adminer:
+    container_name: adminer
+    depends_on: 
+      - mysqldb
+    # image: mcaubrey/adminer
+    build: ./adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: mysqldb
+      ADMINER_DESIGN: 'pepa-linha'
+      ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter'
+      # ADMINER_DEFAULT_USERNAME: $MYSQLDB_USER
+      # ADMINER_DEFAULT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      # ADMINER_DEFAULT_DATABASE: $MYSQLDB_DATABASE
+    ports:
+      - 6969:8080
   app:
+    container_name: spring_app
     depends_on:
       - mysqldb
     build: ./project
@@ -21,7 +38,7 @@ services:
       - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
     environment:
       SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url"  : "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?useSSL=false",
+        "spring.datasource.url"  : "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?allowPublicKeyRetrieval=true&useSSL=false",
         "spring.datasource.username" : "$MYSQLDB_USER",
         "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
@@ -31,5 +48,7 @@ services:
       - .m2:/root/.m2
     stdin_open: true
     tty: true
+  
+
 volumes:
   db:
