@@ -48,7 +48,26 @@ services:
       - .m2:/root/.m2
     stdin_open: true
     tty: true
-  
+  portainer:
+    container_name: portainer
+    depends_on:
+      - mysqldb
+      - adminer
+      - app
+    # image: portainer/portainer-ce:2.9.3
+    build: ./portainer
+    container_name: portainer
+    restart: unless-stopped
+    
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./portainer-data:/data
+    ports:
+      - 9000:9000
 
 volumes:
   db:
+  portainer_data:
