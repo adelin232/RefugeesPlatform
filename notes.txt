@@ -1,0 +1,3 @@
+Reverse proxy only works like this:
+	curl -H "Host: local.proxy.spring" localhost
+Browser does not work
