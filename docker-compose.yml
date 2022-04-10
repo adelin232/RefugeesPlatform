@@ -12,26 +12,13 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - ./mysql/mysql-data:/var/lib/mysql
-  
-  adminer:
-    container_name: adminer
-    depends_on: 
-      - mysqldb
-    # image: mcaubrey/adminer
-    build: ./adminer
-    environment:
-      VIRTUAL_HOST: $ADMINER_PROXY_ADDRESS
-      ADMINER_DEFAULT_SERVER: mysqldb
-      ADMINER_DESIGN: 'pepa-linha'
-      ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter'
-      # ADMINER_DEFAULT_USERNAME: $MYSQLDB_USER
-      # ADMINER_DEFAULT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
-      # ADMINER_DEFAULT_DATABASE: $MYSQLDB_DATABASE
-    ports:
-      - 6969:8080
+    networks:
+      network-db:
+        aliases:
+          - mysqldb
   
   app:
-    container_name: spring_app
+    container_name: spring-app
     depends_on:
       - mysqldb
     build: ./project
@@ -52,6 +39,40 @@ services:
       - /project/.m2:/root/.m2
     stdin_open: true
     tty: true
+    extra_hosts:
+      - "$SPRING_PROXY_ADDRESS:127.0.0.1"
+    networks:
+      network-db:
+        aliases:
+          - app
+          - spring-app
+      network-proxy:
+        aliases:
+          - app
+          - spring-app
+
+  adminer:
+    container_name: adminer
+    depends_on: 
+      - mysqldb
+    # image: mcaubrey/adminer
+    build: ./adminer
+    environment:
+      VIRTUAL_HOST: $ADMINER_PROXY_ADDRESS
+      ADMINER_DEFAULT_SERVER: mysqldb
+      ADMINER_DESIGN: 'pepa-linha'
+      ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter'
+      # ADMINER_DEFAULT_USERNAME: $MYSQLDB_USER
+      # ADMINER_DEFAULT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      # ADMINER_DEFAULT_DATABASE: $MYSQLDB_DATABASE
+    ports:
+      - 6969:8080
+    extra_hosts:
+      - "$ADMINER_PROXY_ADDRESS:127.0.0.1"
+    networks:
+      network-proxy:
+        aliases:
+          - adminer
 
   portainer:
     container_name: portainer
@@ -70,12 +91,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./portainer/portainer-data:/data
     ports:
-      # - 9000:9000   #http
-      - 9443:9443   #https
+      # - 9000:9000   # http
+      - 9443:9443   # https
     environment:
       VIRTUAL_HOST: $PORTAINER_PROXY_ADDRESS
       VIRTUAL_PROTO: https
       VIRTUAL_PORT: 9443
+    extra_hosts:
+      - "$PORTAINER_PROXY_ADDRESS:127.0.0.1"
+    networks:
+      network-proxy:
+        aliases:
+          - portainer
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -83,10 +110,21 @@ services:
       - portainer
     image: jwilder/nginx-proxy
     ports:
-      - "80:80"
+      - 80:80
+      - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      network-proxy:
+        aliases:
+          - nginx-proxy
 
+    
+networks:
+  network-db:
+    name: spring-mysql
+  network-proxy:
+    name: reverse-proxy
   
     
 
