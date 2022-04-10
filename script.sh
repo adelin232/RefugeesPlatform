@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # stop running containers
-docker-compose down
+docker-compose down --remove-orphans
 echo ""
 sleep 1
 

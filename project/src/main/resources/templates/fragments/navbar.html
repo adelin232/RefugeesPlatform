@@ -49,7 +49,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-left">
                             <!-- Show the user's full name from the id token here -->
-                            <div class="dropdown-header" th:text="${userForm.full_name}"></div>
+                            <div class="dropdown-header" th:text="${userForm?.full_name}"></div>
                             <a href="/profile" class="dropdown-item dropdown-profile">
                                 <i class="fas fa-user mr-3"></i> Profile
                             </a>
@@ -81,7 +81,7 @@
                         <!-- Profile image should be set to the profile picture from the id token -->
                             <img th:src="${profile.get('picture')}" alt="Profile picture" class="nav-user-profile d-inline-bloc rounded-circle mr-3" width="50"/>
                             <!-- Show the user's full name from the id token here-->
-                            <h6 class="d-inline-block" th:text="${userForm.full_name}"></h6>
+                            <h6 class="d-inline-block" th:text="${userForm?.full_name}"></h6>
                         </span>
                     </li>
                     <li>
