@@ -17,7 +17,8 @@
     }
     .background::before {
         content: "";
-        background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');
+        /*background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');*/
+        background-image: url('/images/ukraine.png');
         background-size: cover;
         background-repeat: repeat-y;
         position: absolute;
@@ -29,7 +30,7 @@
     }
     .content {
         position: relative;
-        text-align: center;
+        /*text-align: center;*/
     }
     .table {
         width: 100%;
@@ -47,6 +48,17 @@
         display:flex;
         justify-content: center;
     }
+    ul {
+        list-style-type: none; /* Remove bullets */
+        padding: 0;
+        margin: 0; /* Remove margins */
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+    }
+    .mx-6 {
+        padding-left: 20rem;
+        padding-right: 20rem;
+    }
 </style>
 <body>
 <header>
@@ -59,79 +71,29 @@
 
 <div class="background">
     <div class="content">
-        <div class="table-responsive" style="position: relative; margin-top: 40px; margin-left: 40px; margin-right: 40px;">
-            <table class="table table-bordered table-striped table-dark w-auto">
-                <thead style="text-align: center">
-                <tr style="background-color: #0660a9">
-                    <th colspan="15">
-                        <h1> List of rooms </h1>
-                    </th>
-                </tr>
-                <tr>
-                    <th style="font-size: 20px;">
-                        <i class="fas fa-sort-numeric-down"></i>
-                        ID
-                    </th>
-                    <th style="font-size: 20px;">
-                        <i class="fas fa-door-closed"></i>
-                        Num
-                    </th>
-                    <th style="font-size: 20px;">
-                        <i class="fas fa-building"></i>
-                        Floor
-                    </th>
-                    <th style="font-size: 20px;">
-                        <i class="fas fa-users"></i>
-                        Size
-                    </th>
-                    <th style="font-size: 20px">
-                        <i class="fas fa-chevron-circle-down"></i>
-                        Action
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                    <form id="myForm" method="POST" class="form-signin" th:object="${roomForm}" th:action="@{/rooms}" onSubmit="window.location.reload();">
-                        <tr>
-                            <th class="form-group" style="font-size: 20px;min-width: 70px;">
-                                <i class="fas fa-fingerprint"></i>
-                            </th>
-                            <th class="form-group" style="min-width: 115px;">
-                                <input type="text" th:field="*{num}" class="form-control"
-                                       placeholder="Number" autofocus="true" required>
-<!--                                <span class="has-error" th:if="${#fields.hasErrors('num')}" th:errors="*{num}"></span>-->
-                            </th>
-                            <th class="form-group" style="min-width: 115px;">
-                                <input type="text" th:field="*{floor}" class="form-control"
-                                       placeholder="Floor" autofocus="true" required>
-<!--                                <span class="has-error" th:if="${#fields.hasErrors('floor')}" th:errors="*{floor}"></span>-->
-                            </th>
-                            <th class="form-group" style="min-width: 115px;">
-                                <input type="text" th:field="*{size}" class="form-control"
-                                       placeholder="Size" autofocus="true" required>
-<!--                                <span class="has-error" th:if="${#fields.hasErrors('size')}" th:errors="*{size}"></span>-->
-                            </th>
-                            <th style="min-width: 115px">
-                                <button class="btn btn-success" type="submit" style="min-width: 70px;">Add</button>
-                                <br>
-                                <br>
-                                <button class="btn btn-primary" type="reset" style="min-width: 70px;">Reset</button>
-                            </th>
-                        </tr>
-                    </form>
-                    <tr th:each="room : ${allRoomsForm}" style="text-align: center">
-                        <td th:text="${room.id}">room.id</td>
-                        <td th:text="${room.num}">room.num</td>
-                        <td th:text="${room.floor}">room.floor</td>
-                        <td th:text="${room.size}">room.size</td>
-                        <td>
-<!--                            <a th:href="@{/delete_truck(Id=${truck.id})}" class="btn btn-danger" style="width: 70px;">Delete</a>-->
-                            Delete
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <ul class="list-group mx-6 py-5" th:each="room : ${allRoomsForm}">
+            <li class="list-group-item pb-1">
+                <div>
+                    <img th:src="${room.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
+                    <p>
+                        Address:
+                        <span th:text="${room.address}"></span>
+                    </p>
+                    <p>
+                        Floor:
+                        <span th:text="${room.floor}"></span>
+                    </p>
+                    <p>
+                        Number:
+                        <span th:text="${room.num}"></span>
+                    </p>
+                    <p>
+                        Size:
+                        <span th:text="${room.size}"></span>
+                    </p>
+                </div>
+            </li>
+        </ul>
     </div>
 </div>
 </body>
