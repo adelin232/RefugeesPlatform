@@ -34,6 +34,7 @@ public class RoomController {
     @Transactional
     public String rooms(Model model, @AuthenticationPrincipal OidcUser principal) {
         if (principal != null) {
+            int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
 
             if (claims.containsKey("email")) {
@@ -41,7 +42,7 @@ public class RoomController {
                 User user = userRepository.findUserByEmail(email);
 
                 if (user == null) {
-                    return "index";
+                    is_new_user = 1;
                 } else {
                     model.addAttribute("roomForm", new Room());
                 }
@@ -53,6 +54,7 @@ public class RoomController {
 
             model.addAttribute("allRoomsForm", roomsList);
             model.addAttribute("profile", principal.getClaims());
+            model.addAttribute("is_new_user", is_new_user);
         }
 
         return "rooms";

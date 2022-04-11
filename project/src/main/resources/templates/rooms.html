@@ -71,6 +71,7 @@
 
 <div class="background">
     <div class="content">
+        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
         <ul class="list-group mx-6 py-5" th:each="room : ${allRoomsForm}">
             <li class="list-group-item pb-1">
                 <div>
