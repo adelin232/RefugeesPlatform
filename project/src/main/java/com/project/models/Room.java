@@ -25,16 +25,6 @@ public class Room {
 
     private Long size;
 
-    private Boolean isAvail;
-
-    private String link;
-
-    private String address;
-
-    private Double lat;
-
-    private Double lon;
-
 //    @ManyToOne
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
