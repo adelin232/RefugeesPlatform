@@ -1,0 +1,8 @@
+# gen .crt and key
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout spring.key -out spring.crt -config spring.conf -passin pass:spring
+
+# .crt and .key to p12
+openssl pkcs12 -export -in local.proxy.spring.crt -inkey local.proxy.spring.key -out springboot.p12 -name springboot -caname root
+
+# p12 to jks
+keytool -importkeystore -deststorepass [new_keystore_pass] -destkeypass [new_key_pass] -destkeystore [keystore.jks] -srckeystore [keystore.p12] -srcstoretype PKCS12 -srcstorepass [pass_used_in_p12_keystore] -alias [alias_used_in_p12_keystore]

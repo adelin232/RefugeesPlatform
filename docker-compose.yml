@@ -12,10 +12,10 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - ./mysql/mysql-data:/var/lib/mysql
-    networks:
-      network-db:
-        aliases:
-          - mysqldb
+    # networks:
+    #   network-db:
+    #     aliases:
+    #       - mysqldb
   
   app:
     container_name: spring-app
@@ -25,9 +25,15 @@ services:
     restart: on-failure
     env_file: ./.env
     ports:
-      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      # - 6868:$SPRING_DOCKER_PORT
+      - 8443:8443
     environment:
+      # proxy
       VIRTUAL_HOST: $SPRING_PROXY_ADDRESS
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 8443
+      CERT_NAME: spring
+      # spring
       SPRING_APPLICATION_JSON: '{
         "spring.datasource.url"  : "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?allowPublicKeyRetrieval=true&useSSL=false",
         "spring.datasource.username" : "$MYSQLDB_USER",
@@ -41,15 +47,15 @@ services:
     tty: true
     extra_hosts:
       - "$SPRING_PROXY_ADDRESS:127.0.0.1"
-    networks:
-      network-db:
-        aliases:
-          - app
-          - spring-app
-      network-proxy:
-        aliases:
-          - app
-          - spring-app
+    # networks:
+    #   network-db:
+    #     aliases:
+    #       - app
+    #       - spring-app
+    #   network-proxy:
+    #     aliases:
+    #       - app
+    #       - spring-app
 
   adminer:
     container_name: adminer
@@ -58,7 +64,12 @@ services:
     # image: mcaubrey/adminer
     build: ./adminer
     environment:
+      # proxy
       VIRTUAL_HOST: $ADMINER_PROXY_ADDRESS
+      # VIRTUAL_PROTO: https
+      # VIRTUAL_PORT: 6969
+      CERT_NAME: adminer
+      # adminer
       ADMINER_DEFAULT_SERVER: mysqldb
       ADMINER_DESIGN: 'pepa-linha'
       ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter'
@@ -69,10 +80,10 @@ services:
       - 6969:8080
     extra_hosts:
       - "$ADMINER_PROXY_ADDRESS:127.0.0.1"
-    networks:
-      network-proxy:
-        aliases:
-          - adminer
+    # networks:
+    #   network-proxy:
+    #     aliases:
+    #       - adminer
 
   portainer:
     container_name: portainer
@@ -94,15 +105,17 @@ services:
       # - 9000:9000   # http
       - 9443:9443   # https
     environment:
+      #proxy
       VIRTUAL_HOST: $PORTAINER_PROXY_ADDRESS
       VIRTUAL_PROTO: https
       VIRTUAL_PORT: 9443
+      CERT_NAME: portainer
     extra_hosts:
       - "$PORTAINER_PROXY_ADDRESS:127.0.0.1"
-    networks:
-      network-proxy:
-        aliases:
-          - portainer
+    # networks:
+    #   network-proxy:
+    #     aliases:
+    #       - portainer
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -114,17 +127,18 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-    networks:
-      network-proxy:
-        aliases:
-          - nginx-proxy
+      - ./nginx/certs:/etc/nginx/certs
+    # networks:
+    #   network-proxy:
+    #     aliases:
+    #       - nginx-proxy
 
     
-networks:
-  network-db:
-    name: spring-mysql
-  network-proxy:
-    name: reverse-proxy
+# networks:
+#   network-db:
+#     name: spring-mysql
+#   network-proxy:
+#     name: reverse-proxy
   
     
 
