@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorator="layouts/default">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,10 +33,6 @@
         position: relative;
         /*text-align: center;*/
     }
-    .table {
-        width: 100%;
-        margin: auto;
-    }
     html {
         position: relative;
         min-height: 100%;
@@ -43,10 +40,6 @@
     }
     body {
         margin-bottom: 0px;
-    }
-    .form-center {
-        display:flex;
-        justify-content: center;
     }
     ul {
         list-style-type: none; /* Remove bullets */
@@ -71,14 +64,17 @@
 
 <div class="background">
     <div class="content">
-        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
-        <ul class="list-group mx-6 py-5" th:each="room : ${allRoomsForm}">
+<!--        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>-->
+        <ul class="list-group mx-6 py-3" th:each="room : ${allRoomsForm}">
             <li class="list-group-item pb-1">
                 <div>
                     <img th:src="${room.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
                     <p>
                         Address:
                         <span th:text="${room.address}"></span>
+                    </p>
+                    <p style="float: right; padding-top: 10px;">
+                        <a th:href="@{/room_view(roomId=${room.id})}" class="btn btn-info">View Details</a>
                     </p>
                     <p>
                         Floor:

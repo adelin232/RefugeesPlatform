@@ -17,17 +17,11 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public Room getRoom() {
-        List<Room> rooms = roomRepository.findAll();
-
-        return null;
+    public Room getRoom(Long id) {
+        return roomRepository.getById(id);
     }
 
     public List<Room> getRooms() {
-        List<Room> rooms = roomRepository.findAll();
-
-
-
-        return rooms;
+        return roomRepository.findAll();
     }
 }

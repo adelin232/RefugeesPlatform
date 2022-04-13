@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorator="layouts/default">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Room</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/monokai-sublime.min.css"/>
+</head>
+<style>
+    .background {
+        position: center;
+    }
+    .background::before {
+        content: "";
+        /*background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');*/
+        background-image: url('/images/ukraine.png');
+        background-size: cover;
+        background-repeat: repeat-y;
+        position: absolute;
+        top: 62px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        opacity: 0.1;
+    }
+    .content {
+        position: relative;
+        /*text-align: center;*/
+    }
+    html {
+        position: relative;
+        min-height: 100%;
+        padding-bottom: 0px;
+    }
+    body {
+        margin-bottom: 0px;
+    }
+    div {
+        padding: 0;
+        margin: 0; /* Remove margins */
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .mx-7 {
+        padding-left: 25rem;
+        padding-right: 25rem;
+    }
+</style>
+<body>
+<header>
+    <div>
+        <nav th:replace="fragments/navbar"></nav>
+    </div>
+</header>
+
+<div th:replace="fragments/scripts"></div>
+
+<div class="background">
+    <div class="content">
+        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
+        <div class="mx-7 py-3">
+            <img th:src="${roomForm.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
+            <p>
+                Address:
+                <span th:text="${roomForm.address}"></span>
+            </p>
+            <p>
+                Floor:
+                <span th:text="${roomForm.floor}"></span>
+            </p>
+            <p>
+                Number:
+                <span th:text="${roomForm.num}"></span>
+            </p>
+            <p>
+                Size:
+                <span th:text="${roomForm.size}"></span>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

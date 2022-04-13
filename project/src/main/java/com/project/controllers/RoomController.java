@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -87,5 +88,36 @@ public class RoomController {
         }
 
         return "rooms";
+    }
+
+    @GetMapping("/room_view")
+    @Transactional
+    public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId) {
+        if (principal != null) {
+            int is_new_user = 0;
+            Map<String, Object> claims = principal.getClaims();
+
+            if (claims.containsKey("email")) {
+                String email = (String) claims.get("email");
+                User user = userRepository.findUserByEmail(email);
+
+                if (user == null) {
+                    is_new_user = 1;
+                } else {
+                    Room room = roomService.getRoom(roomId);
+                    model.addAttribute("roomForm", room);
+                }
+
+                model.addAttribute("userForm", user);
+            }
+
+            List<Room> roomsList = roomService.getRooms();
+
+            model.addAttribute("allRoomsForm", roomsList);
+            model.addAttribute("profile", principal.getClaims());
+            model.addAttribute("is_new_user", is_new_user);
+        }
+
+        return "room_view";
     }
 }
