@@ -21,8 +21,8 @@
         }
         .background::before {
             content: "";
-            /*background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');*/
-            background-image: url('/images/ukraine.png');
+            background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');
+            /*background-image: url('/images/ukraine.png');*/
             background-size: cover;
             background-repeat: repeat-y;
             position: absolute;
@@ -123,7 +123,7 @@
 
 <div class="background">
     <div class="content">
-        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
+<!--        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>-->
         <div class="mx-7 py-3">
             <img th:src="${roomForm.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
             <p>
