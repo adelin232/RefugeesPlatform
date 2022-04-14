@@ -23,11 +23,11 @@ public class User {
 
     private String phone;
 
-    private String first_name;
+    private String firstName;
 
-    private String last_name;
+    private String lastName;
 
-    private String full_name;
+    private String fullName;
 
 //    @OneToMany(mappedBy = "user")
 //    private List<Room> rooms;

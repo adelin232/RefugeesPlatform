@@ -19,9 +19,9 @@ public class UserService {
 
     public void updateUser(User new_user) {
         User user = getUser(new_user.getEmail());
-        user.setFirst_name(new_user.getFirst_name());
-        user.setLast_name(new_user.getLast_name());
-        user.setFull_name(new_user.getFull_name());
+        user.setFirstName(new_user.getFirstName());
+        user.setLastName(new_user.getLastName());
+        user.setFullName(new_user.getFullName());
         user.setEmail(new_user.getEmail());
         user.setPhone(new_user.getPhone());
         userRepository.save(user);
