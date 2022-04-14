@@ -13,8 +13,8 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    public Room createRoom(Room room) {
-        return roomRepository.save(room);
+    public void createRoom(Room room) {
+        roomRepository.save(room);
     }
 
     public Room getRoom(Long id) {
