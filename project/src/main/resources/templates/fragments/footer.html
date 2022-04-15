@@ -1,13 +1,100 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Footer</title>
-</head>
-<footer th:fragment="footer" class="bg-light p-3 text-center">
-    <div class="logo"></div>
-    <p>
-        Sample project provided by
-        <a href="https://auth0.com">Auth0</a>
-    </p>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<style>
+footer {
+  position: relative;
+  bottom: 0;
+  margin-top: 50px;
+  width: 100%;
+  height: 210px;
+}
+</style>
+<body>
+
+<!-- Footer -->
+<footer class="page-footer text-center bg-dark text-light" th:fragment="footer">
+    <!-- Grid container -->
+    <div class="container p-0">
+
+        <!-- Section: Social media -->
+        <section class="mb-2">
+            <!-- Facebook -->
+            <a class="btn btn-primary btn-floating m-1" style="background-color: #3b5998" href="#!" role="button"><i class="fab fa-facebook-f"></i></a>
+            <!-- Twitter -->
+            <a class="btn btn-primary btn-floating m-1" style="background-color: #55acee" href="#!" role="button"><i class="fab fa-twitter"></i></a>
+            <!-- Google -->
+            <a class="btn btn-primary btn-floating m-1" style="background-color: #dd4b39" href="#!" role="button"><i class="fab fa-google"></i></a>
+            <!-- Instagram -->
+            <a class="btn btn-primary btn-floating m-1" style="background-color: #ac2bac" href="#!" role="button"><i class="fab fa-instagram"></i></a>
+            <!-- Linkedin -->
+            <a class="btn btn-primary btn-floating m-1" style="background-color: #0082ca" href="#!" role="button"><i class="fab fa-linkedin-in"></i></a>
+            <!-- Github -->
+            <a class="btn btn-primary btn-floating m-1" style="background-color: #333333" href="#!" role="button"><i class="fab fa-github"></i></a>
+        </section>
+        <!-- Section: Social media -->
+
+
+        <!-- Section: Form -->
+        <section class="p-1">
+            <form action="">
+                <!--Grid row-->
+                <div class="row d-flex justify-content-center">
+                    <!--Grid column-->
+                    <div class="col-auto">
+                        <p class="pt-2">
+                            <strong>Sign up for our newsletter</strong>
+                        </p>
+                    </div>
+                    <!--Grid column-->
+
+                    <!--Grid column-->
+                    <div class="col-md-5 col-12">
+                        <!-- Email input -->
+                        <div class="form-outline mb-1">
+                            <input type="email" id="form5Example2" class="form-control" />
+                            <label class="form-label" for="form5Example2">Email address</label>
+                        </div>
+                    </div>
+                    <!--Grid column-->
+
+                    <!--Grid column-->
+                    <div class="col-auto">
+
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary mb-3">
+                            Subscribe
+                        </button>
+                    </div>
+                    <!--Grid column-->
+                </div>
+                <!--Grid row-->
+            </form>
+        </section>
+        <!-- Section: Form -->
+
+
+        <!-- Section: Text -->
+        <section class="mb-0">
+            <p>
+                Follow us on social media and signup up for our newsletter!
+            </p>
+        </section>
+        <!-- Section: Text -->
+
+
+    </div>
+    <!-- Grid container -->
+
+    <!-- Copyright -->
+    <div class="container-fluid p-0 text-center text-dark" style="background-color: rgba(0, 0, 0, 0.15); width: 100%;">
+        &copy 2022 Copyright:
+        <a class="text-dark" href="https://acs.upb.ro/">acs.upb.ro</a>
+    </div>
+    <!-- Copyright -->
+
 </footer>
+<!-- Footer-->
+</body>
+
 </html>

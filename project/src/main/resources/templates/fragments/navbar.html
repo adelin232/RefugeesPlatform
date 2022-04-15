@@ -4,12 +4,17 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Spring MVC Security Quickstart</title>
 </head>
-<div class="nav-container mb-3" th:fragment="navbar">
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
+<div class="nav-container sm-0" th:fragment="navbar">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light py-0">
         <div class="container">
-            <div class="navbar-brand logo"></div>
+<!--            <div class="navbar-brand logo"></div>-->
+            <div class="navbar-brand">
+                <!-- Logo Image -->
+                <img src="https://www.erc.edu/assets/img/image.png" width="60" alt="" class="d-inline-block align-middle mr-2">
+                <!-- Logo Text -->
+                <span class="text-uppercase font-weight-bold" style="font-size: 2rem;">NAME</span>
+            </div>
             <button
                     class="navbar-toggler"
                     type="button"
@@ -25,9 +30,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a href="/" class="nav-link">Home</a>
+                        <a href="/" class="nav-link" style="font-size: 1.5rem;">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/rooms" class="nav-link" style="font-size: 1.5rem;">Rooms</a>
                     </li>
                 </ul>
+
                 <ul class="navbar-nav d-none d-md-block">
 
                     <!-- Login button: show if NOT authenticated -->
@@ -53,12 +62,10 @@
                             <a href="/profile" class="dropdown-item dropdown-profile">
                                 <i class="fas fa-user mr-3"></i> Profile
                             </a>
-<!--                            <a href="/users" class="dropdown-item dropdown-profile">-->
-<!--                                <i class="fas fa-user mr-3"></i> Users-->
+
+<!--                            <a href="/rooms" class="dropdown-item dropdown-profile">-->
+<!--                                <i class="fas fa-hotel mr-3"></i> Rooms-->
 <!--                            </a>-->
-                            <a href="/rooms" class="dropdown-item dropdown-profile">
-                                <i class="fas fa-hotel mr-3"></i> Rooms
-                            </a>
                             <a id="qsLogoutBtn" th:href="@{/logout}" class="dropdown-item">
                                 <i class="fas fa-power-off mr-3"></i> Log out
                             </a>
@@ -69,8 +76,8 @@
                 </ul>
 
                 <!-- Responsive login button: show if NOT authenticated -->
-                <ul sec:authorize="!isAuthenticated()" class="navbar-nav d-md-none">
-                    <a th:href="@{/oauth2/authorization/auth0}" id="qsLoginBtn" class="btn btn-primary btn-block">Login</a>
+                <ul sec:authorize="!isAuthenticated()" class="navbar-nav d-sm-none">
+                    <a th:href="@{/oauth2/authorization/auth0}" id="qsLoginBtn" class="btn btn-primary btn-lg">Login</a>
                 </ul>
                 <!-- /Responsive login button -->
 
@@ -92,10 +99,10 @@
 <!--                        <i class="fas fa-user mr-3"></i>-->
 <!--                        <a th:href="@{/users}"> Users</a>-->
 <!--                    </li>-->
-                    <li>
-                        <i class="fas fa-hotel mr-3"></i>
-                        <a th:href="@{/rooms}"> Rooms</a>
-                    </li>
+<!--                    <li>-->
+<!--                        <i class="fas fa-hotel mr-3"></i>-->
+<!--                        <a th:href="@{/rooms}"> Rooms</a>-->
+<!--                    </li>-->
                     <li>
                         <i class="fas fa-power-off mr-3"></i>
                         <a th:href="@{/logout}"> Log out</a>

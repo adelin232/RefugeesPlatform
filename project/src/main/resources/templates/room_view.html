@@ -7,111 +7,51 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Room</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/monokai-sublime.min.css"/>
-
-    <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css">
-    <script src="https://js.arcgis.com/4.22/"></script>
-
-    <style>
-        .background {
-            position: center;
-        }
-        .background::before {
-            content: "";
-            background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');
-            /*background-image: url('/images/ukraine.png');*/
-            background-size: cover;
-            background-repeat: repeat-y;
-            position: absolute;
-            top: 62px;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            opacity: 0.1;
-        }
-        .content {
-            position: relative;
-            /*text-align: center;*/
-        }
-        html {
-            position: relative;
-            min-height: 100%;
-            padding-bottom: 0;
-        }
-        body {
-            margin-bottom: 0;
-        }
-        div {
-            padding: 0;
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .mx-7 {
-            padding-left: 25rem;
-            padding-right: 25rem;
-        }
-        #viewDiv {
-            padding: 0;
-            margin: auto;
-            height: 100%;
-            width: 100%;
-        }
-    </style>
-
-    <script th:inline="javascript">
-
-        require([
-            "esri/config",
-            "esri/Map",
-            "esri/views/MapView",
-            "esri/Graphic"
-
-        ], function(esriConfig, Map, MapView, Graphic) {
-
-            esriConfig.apiKey = "AAPKfc023320ea5b4fb9955d7e74a5623fb4KZHfa6kn7i--Jv-1qxWZfL067XASOUpPONXgOqcnsQU8AgpZer-JDLilHLOJL9pY";
-
-            const map = new Map({
-                basemap: "arcgis-navigation" //Basemap layer service
-            });
-
-            const view = new MapView({
-                container: "viewDiv",
-                map: map,
-                center: [26.10, 44.43], //Longitude, latitude
-                zoom: 8
-            });
-
-            var roomForm_lat = /*[[${roomForm.lat}]]*/ 0.00;
-            var roomForm_lng = /*[[${roomForm.lon}]]*/ 0.00;
-
-            const point = {
-                type: "point",
-                longitude: roomForm_lng,
-                latitude: roomForm_lat
-            };
-
-            addGraphic(point);
-
-            function addGraphic(point) {
-                const graphic = new Graphic({
-                    symbol: {
-                        type: "simple-marker",
-                        color: "white",
-                        size: "12px"
-                    },
-                    geometry: point
-                });
-                view.graphics.add(graphic);
-            }
-        });
-    </script>
 </head>
-
+<style>
+    .background {
+        position: center;
+    }
+    .background::before {
+        content: "";
+        background-image: url('/images/ukraine.png');
+        background-size: cover;
+        background-repeat: repeat-y;
+        position: absolute;
+        top: 72px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        opacity: 0.1;
+    }
+    .content {
+        position: relative;
+        /*text-align: center;*/
+    }
+    html {
+        position: relative;
+        min-height: 100%;
+        padding-bottom: 0px;
+    }
+    body {
+        margin-bottom: 0px;
+    }
+    div {
+        padding: 0;
+        margin: 0; /* Remove margins */
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .mx-7 {
+        padding-left: 25rem;
+        padding-right: 25rem;
+    }
+</style>
 <body>
 <header>
     <div>
@@ -123,7 +63,7 @@
 
 <div class="background">
     <div class="content">
-<!--        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>-->
+        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
         <div class="mx-7 py-3">
             <img th:src="${roomForm.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
             <p>
@@ -143,53 +83,10 @@
                 <span th:text="${roomForm.size}"></span>
             </p>
         </div>
-        <div id="viewDiv" style="position: relative; width: 1200px; height: 675px; border:2px solid #575757; padding-bottom: 5px;"></div>
     </div>
 </div>
 
-<!-- #TODO? pentru a afisa locatia ca String -->
-<script th:inline="javascript">
-    require([
-        "esri/config",
-        "esri/Map",
-        "esri/views/MapView",
-        "esri/rest/locator"
-
-    ], function(esriConfig, Map, MapView, locator) {
-
-        esriConfig.apiKey = "AAPKfc023320ea5b4fb9955d7e74a5623fb4KZHfa6kn7i--Jv-1qxWZfL067XASOUpPONXgOqcnsQU8AgpZer-JDLilHLOJL9pY";
-
-        const map = new Map({
-            basemap: "arcgis-navigation"
-        });
-
-        const view = new MapView({
-            container: "viewDiv_hidden",
-            map: map,
-            center: [26.10, 44.43],
-            zoom: 10
-        });
-
-        const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
-
-        var lat = /*[[${roomForm.lat}]]*/ 44.43;
-        var lon = /*[[${roomForm.lon}]]*/ 26.10;
-        const point = { //Create a point
-            type: "point",
-            longitude: lon,
-            latitude: lat
-        };
-        const params = {
-            location: point
-        };
-        locator.locationToAddress(serviceUrl, params).then(function(response) { // Show the address found
-            var address = response.address;
-            document.getElementById('truck_address').innerHTML = address;
-        }, function(err) { // Show no address found
-            document.getElementById('truck_address').innerHTML = "No address found";
-        });
-    });
-</script>
+<div th:insert="fragments/footer"></div>
 
 </body>
 

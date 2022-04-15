@@ -7,7 +7,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/monokai-sublime.min.css"/>
@@ -18,11 +18,11 @@
     }
     .background::before {
         content: "";
-        background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');
+        background-image: url('/images/ukraine.png');
         background-size: cover;
         background-repeat: repeat-y;
         position: absolute;
-        top: 62px;
+        top: 72px;
         right: 0px;
         bottom: 0px;
         left: 0px;
@@ -94,7 +94,7 @@
                                                 <th class="form-group" style="width: 250px">
                                                     <input type="text" th:field="*{firstName}" class="form-control"
                                                            th:placeholder="*{firstName}" autofocus="true" required>
-        <!--                                            <span class="has-error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>-->
+        <!--                                            <span class="has-error" th:if="${#fields.hasErrors('first_name')}" th:errors="*{first_name}"></span>-->
                                                 </th>
                                             </tr>
                                             <tr>
@@ -105,7 +105,7 @@
                                                 <th class="form-group" style="width: 250px">
                                                     <input type="text" th:field="*{lastName}" class="form-control"
                                                            th:placeholder="*{lastName}" autofocus="true" required>
-        <!--                                        <span class="has-error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>-->
+        <!--                                        <span class="has-error" th:if="${#fields.hasErrors('last_name')}" th:errors="*{last_name}"></span>-->
                                                 </th>
                                             </tr>
         <!--                                <tr>-->
@@ -154,6 +154,9 @@
         </div>
     </div>
 </div>
+
+<div th:insert="fragments/footer"></div>
+
 </body>
 
 </html>
