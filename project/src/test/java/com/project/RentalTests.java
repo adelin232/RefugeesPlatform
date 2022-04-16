@@ -21,7 +21,7 @@ public class RentalTests {
     @Test
     @DisplayName("Insert rental should work")
     void insertUserTest() {
-        Rental rental = new Rental(1L, 1L, 1L, "04/05/2022", "07/08/2022");
+        Rental rental = new Rental(1L, 1L, 1L, "04/05/2022", "08/09/2022");
 
         rentalRepository.save(rental);
         assertThat(rentalRepository.findById(rental.getId())).hasValue(rental);
