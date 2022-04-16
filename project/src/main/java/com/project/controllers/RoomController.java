@@ -1,9 +1,10 @@
 package com.project.controllers;
 
+import com.project.models.Rental;
 import com.project.models.Room;
 import com.project.models.User;
-import com.project.repositories.RoomRepository;
 import com.project.repositories.UserRepository;
+import com.project.services.RentalService;
 import com.project.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,8 +27,9 @@ public class RoomController {
     private RoomService roomService;
 
     @Autowired
-    private RoomRepository roomRepository;
+    private RentalService rentalService;
 
+    // TODO refactor: use service instead of repo
     @Autowired
     private UserRepository userRepository;
 
@@ -111,11 +113,36 @@ public class RoomController {
                 model.addAttribute("userForm", user);
             }
 
-            List<Room> roomsList = roomService.getRooms();
-
-            model.addAttribute("allRoomsForm", roomsList);
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        }
+
+        return "room_view";
+    }
+
+    @PostMapping("/room_view")
+    @Transactional
+    public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal,  @RequestParam(name="roomId") Long roomId, @ModelAttribute("rentalForm") Rental rentalForm) {
+        if (principal != null) {
+            Map<String, Object> claims = principal.getClaims();
+
+            if (claims.containsKey("email")) {
+                String email = (String) claims.get("email");
+                User user = userRepository.findUserByEmail(email);
+
+                if (user == null) {
+                    return "index";
+                } else {
+                    rentalService.createRental(rentalForm);
+                    model.addAttribute("rentalForm", rentalForm);
+                    Room room = roomService.getRoom(roomId);
+                    model.addAttribute("roomForm", room);
+                }
+
+                model.addAttribute("userForm", user);
+            }
+
+            model.addAttribute("profile", principal.getClaims());
         }
 
         return "room_view";

@@ -12,8 +12,8 @@ public class RentalService {
     @Autowired
     private RentalRepository rentalRepository;
 
-    public void createRental(Rental room) {
-        rentalRepository.save(room);
+    public void createRental(Rental rental) {
+        rentalRepository.save(rental);
     }
 
     public Rental getRental(Long id) {

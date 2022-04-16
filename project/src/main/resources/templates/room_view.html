@@ -92,6 +92,18 @@
         });
     </script>
 
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap-datepicker/css/bootstrap-datepicker.css}"/>
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap-datepicker/css/bootstrap-datepicker.standalone.css}"/>
+
+    <script th:src="@{assets/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+
+    <script>
+        $('.input-group.date').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+    </script>
+
     <!-- #TODO? pentru a afisa locatia ca String -->
 <!--    <script th:inline="javascript">-->
 <!--    require([-->
@@ -195,8 +207,8 @@
 
 <div class="background">
     <div class="content">
-        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
-        <div class="mx-7 py-3">
+<!--        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>-->
+        <div class="mx-7 pt-3">
             <img th:src="${roomForm.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
             <p>
                 Address:
@@ -215,7 +227,31 @@
                 <span th:text="${roomForm.size}"></span>
             </p>
         </div>
-        <div id="viewDiv" style="position: relative; width: 1200px; height: 675px; border:2px solid #575757; padding-bottom: 5px;"></div>
+        <div class="mx-7 pb-3">
+            <form method="post" th:object="${rentalForm}">
+                <div class="form-group row">
+                    <div class="col-md-4 mt-5">
+                        <label for="startDate">Date of start</label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control" id="startDate" autocomplete="off" th:field="*{startDate}"/>
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            </div>
+                        </div>
+                        <label for="endDate">Date of end</label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control" id="endDate" autocomplete="off" th:field="*{endDate}"/>
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Rent</button>
+            </form>
+        </div>
+        <div id="viewDiv" style="position: relative; width: 1200px; height: 675px; border:2px solid #575757; padding-top: 5px; padding-bottom: 5px;"></div>
     </div>
 </div>
 
