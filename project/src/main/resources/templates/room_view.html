@@ -216,13 +216,15 @@
             </p>
         </div>
         <div class="mx-7 pb-5">
-            <form method="POST" class="form-signin mt-5 pb-3" th:object="${rentalForm}" th:action="@{/room_view}">
+            <form method="POST" class="form-signin mt-5 pb-3" th:object="${rentalForm}" onSubmit="window.location.reload();">
+<!--                <input class="form-control" type="text" th:attr="value = ${roomForm.id}" th:field="*{roomId}">-->
+                <input type="hidden" th:field="*{roomId}" th:value="${roomForm.id}"/>
                 <div class="form-group row">
                     <div class="col-md-4 ">
                         <label for="startDate">Date of start</label>
                         <div class="input-group date">
                             <input type="text" class="form-control" id="startDate" autocomplete="off" th:field="*{startDate}"
-                                   placeholder="DD/MM/YYYY" autofocus required/>
+                                   placeholder="DD/MM/YYYY" autofocus="true" required/>
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                             </div>
@@ -234,7 +236,7 @@
                         <label for="endDate">Date of end</label>
                         <div class="input-group date">
                             <input type="text" class="form-control" id="endDate" autocomplete="off" th:field="*{endDate}"
-                                   placeholder="DD/MM/YYYY" autofocus required/>
+                                   placeholder="DD/MM/YYYY" autofocus="true" required/>
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                             </div>
@@ -243,6 +245,9 @@
                 </div>
 
                 <button class="btn btn-primary" type="submit">Rent</button>
+<!--                <div>-->
+<!--                    <a th:href="@{/room_view(roomId=${roomForm.id})}" class="btn btn-info">Rent</a>-->
+<!--                </div>-->
             </form>
         </div>
         <div id="viewDiv" style="position: relative; width: 1200px; height: 675px; border:2px solid #575757; padding-top: 5px; padding-bottom: 5px;"></div>

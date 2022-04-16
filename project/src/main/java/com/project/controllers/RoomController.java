@@ -3,10 +3,9 @@ package com.project.controllers;
 import com.project.models.Rental;
 import com.project.models.Room;
 import com.project.models.User;
-import com.project.repositories.RoomRepository;
-import com.project.repositories.UserRepository;
 import com.project.services.RentalService;
 import com.project.services.RoomService;
+import com.project.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -20,9 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class RoomController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private RoomService roomService;
@@ -30,12 +33,6 @@ public class RoomController {
     @Autowired
     private RentalService rentalService;
 
-    // TODO refactor: use service instead of repo
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoomRepository roomRepository;
 
     @GetMapping("/rooms")
     @Transactional
@@ -46,7 +43,7 @@ public class RoomController {
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userRepository.findUserByEmail(email);
+                User user = userService.findUserByEmail(email);
 
                 if (user == null) {
                     is_new_user = 1;
@@ -75,7 +72,7 @@ public class RoomController {
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userRepository.findUserByEmail(email);
+                User user = userService.findUserByEmail(email);
 
                 if (user == null) {
                     return "index";
@@ -105,14 +102,16 @@ public class RoomController {
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userRepository.findUserByEmail(email);
+                User user = userService.findUserByEmail(email);
 
                 if (user == null) {
                     is_new_user = 1;
                 } else {
                     Room room = roomService.getRoom(roomId);
                     model.addAttribute("roomForm", room);
-                    model.addAttribute("rentalForm", new Rental());
+
+                    Rental rental = rentalService.findRentalByUserId(user.getId());
+                    model.addAttribute("rentalForm", Objects.requireNonNullElseGet(rental, Rental::new));
                 }
 
                 model.addAttribute("userForm", user);
@@ -133,14 +132,15 @@ public class RoomController {
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userRepository.findUserByEmail(email);
+                User user = userService.findUserByEmail(email);
 
                 if (user == null) {
                     return "index";
                 } else {
                     model.addAttribute("roomForm", roomForm);
-                    rentalForm.setRoomId(roomForm.getId());
                     rentalForm.setUserId(user.getId());
+                    rentalForm.setRoomId(1L);
+//                    rentalForm.setRoomId(roomForm.getId());
                     rentalService.createRental(rentalForm);
                     model.addAttribute("rentalForm", rentalForm);
                 }

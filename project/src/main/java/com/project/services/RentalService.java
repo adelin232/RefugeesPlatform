@@ -20,6 +20,10 @@ public class RentalService {
         return rentalRepository.getById(id);
     }
 
+    public Rental findRentalByUserId(Long userId) {
+        return rentalRepository.findRentalByUserId(userId);
+    }
+
     public List<Rental> getRentals() {
         return rentalRepository.findAll();
     }
