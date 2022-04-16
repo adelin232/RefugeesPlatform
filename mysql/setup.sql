@@ -8,6 +8,12 @@ BEGIN
 END
 //
 
+CREATE PROCEDURE FIND_RENTAL_BY_USERID(IN user_id_in BIGINT)
+BEGIN 
+    SELECT * FROM rentals WHERE user_id = user_id_in;
+END
+//
+
 DELIMITER ;
 
 CREATE TABLE rooms (
@@ -27,3 +33,11 @@ VALUES (26, 'First Floor', 2, 1, 'https://studioinsign.ro/wp-content/uploads/201
 
 INSERT INTO rooms (num, floor, size, is_avail, link, address, lat, lon)
 VALUES (13, 'Second Floor', 3, 1, 'https://idecorate.ro/wp-content/uploads/2017/04/design-interior-dormitor-5.jpg', 'Str. Bazalt, Nr. 29', 46.0189, 25.0521);
+
+CREATE TABLE rentals (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	user_id BIGINT NOT NULL,
+	room_id BIGINT NOT NULL,
+	start_date VARCHAR(255) NOT NULL,
+	end_date VARCHAR(255) NOT NULL
+);
