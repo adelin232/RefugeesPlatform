@@ -12,6 +12,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/monokai-sublime.min.css"/>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
     <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.22/"></script>
 
@@ -53,7 +59,7 @@
             const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
 
             const params = {
-                location: point;
+                location: point
             };
 
             locator.locationToAddress(serviceUrl, params)
@@ -137,8 +143,8 @@
     }
     .background::before {
         content: "";
-<!--        background-image: url('/images/ukraine.png');-->
-        background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');
+        background-image: url('/images/ukraine.png');
+        /*background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');*/
         background-size: cover;
         background-repeat: repeat-y;
         position: absolute;
@@ -171,6 +177,12 @@
         padding-left: 25rem;
         padding-right: 25rem;
     }
+    #viewDiv {
+        padding: 0;
+        margin: auto;
+        height: 100%;
+        width: 100%;
+    }
 </style>
 <body>
 <header>
@@ -179,11 +191,11 @@
     </div>
 </header>
 
-<div th:replace="fragments/scripts"></div>
+<!--<div th:replace="fragments/scripts"></div>-->
 
 <div class="background">
     <div class="content">
-<!--        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>-->
+        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
         <div class="mx-7 py-3">
             <img th:src="${roomForm.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
             <p>
@@ -206,7 +218,6 @@
         <div id="viewDiv" style="position: relative; width: 1200px; height: 675px; border:2px solid #575757; padding-bottom: 5px;"></div>
     </div>
 </div>
-
 
 
 <div th:insert="fragments/footer"></div>
