@@ -71,7 +71,7 @@
     <div class="content">
         <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
 <!--        <ul class="list-group mx-6 py-3" th:each="room, iter : ${allRoomsForm}">-->
-            <div class="container-fluid mx-auto" th:each="room, iter : ${allRoomsForm}" th:if="${iter.index % 2 == 0}">
+            <div class="container-fluid mx-auto" style="font-weight: bold;" th:each="room, iter : ${allRoomsForm}" th:if="${iter.index % 2 == 0}">
 <!--                <div class="card-deck">-->
                     <div class="row">
                         <div class="col-6 mt-3">

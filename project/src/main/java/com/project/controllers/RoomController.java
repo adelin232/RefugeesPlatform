@@ -3,6 +3,7 @@ package com.project.controllers;
 import com.project.models.Rental;
 import com.project.models.Room;
 import com.project.models.User;
+import com.project.repositories.RoomRepository;
 import com.project.repositories.UserRepository;
 import com.project.services.RentalService;
 import com.project.services.RoomService;
@@ -32,6 +33,9 @@ public class RoomController {
     // TODO refactor: use service instead of repo
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
 
     @GetMapping("/rooms")
     @Transactional
@@ -108,6 +112,7 @@ public class RoomController {
                 } else {
                     Room room = roomService.getRoom(roomId);
                     model.addAttribute("roomForm", room);
+                    model.addAttribute("rentalForm", new Rental());
                 }
 
                 model.addAttribute("userForm", user);
@@ -122,7 +127,7 @@ public class RoomController {
 
     @PostMapping("/room_view")
     @Transactional
-    public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal,  @RequestParam(name="roomId") Long roomId, @ModelAttribute("rentalForm") Rental rentalForm) {
+    public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm, @ModelAttribute("rentalForm") Rental rentalForm) {
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -133,10 +138,11 @@ public class RoomController {
                 if (user == null) {
                     return "index";
                 } else {
+                    model.addAttribute("roomForm", roomForm);
+                    rentalForm.setRoomId(roomForm.getId());
+                    rentalForm.setUserId(user.getId());
                     rentalService.createRental(rentalForm);
                     model.addAttribute("rentalForm", rentalForm);
-                    Room room = roomService.getRoom(roomId);
-                    model.addAttribute("roomForm", room);
                 }
 
                 model.addAttribute("userForm", user);
