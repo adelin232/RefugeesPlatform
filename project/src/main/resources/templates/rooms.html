@@ -52,6 +52,11 @@
         padding-left: 20rem;
         padding-right: 20rem;
     }
+
+    .card-horizontal {
+        display: flex;
+        flex: 1 1 auto;
+    }
 </style>
 <body>
 <header>
@@ -65,31 +70,141 @@
 <div class="background">
     <div class="content">
         <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
-        <ul class="list-group mx-6 py-3" th:each="room : ${allRoomsForm}">
-            <li class="list-group-item pb-1">
-                <div>
-                    <img th:src="${room.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
-                    <p>
-                        Address:
-                        <span th:text="${room.address}"></span>
-                    </p>
-                    <p style="float: right; padding-top: 10px;">
-                        <a th:href="@{/room_view(roomId=${room.id})}" class="btn btn-info">View Details</a>
-                    </p>
-                    <p>
-                        Floor:
-                        <span th:text="${room.floor}"></span>
-                    </p>
-                    <p>
-                        Number:
-                        <span th:text="${room.num}"></span>
-                    </p>
-                    <p>
-                        Size:
-                        <span th:text="${room.size}"></span>
-                    </p>
-                </div>
-            </li>
+<!--        <ul class="list-group mx-6 py-3" th:each="room, iter : ${allRoomsForm}">-->
+            <div class="container-fluid mx-auto" th:each="room, iter : ${allRoomsForm}" th:if="${iter.index % 2 == 0}">
+<!--                <div class="card-deck">-->
+                    <div class="row">
+                        <div class="col-6 mt-3">
+                            <div class="card">
+                                <div class="card-horizontal">
+                                    <div class="img-square-wrapper">
+                                        <img class="rounded img-fluid" th:src="${room.link}" width="270" height="150" alt="Card image cap">
+                                    </div>
+                                    <div class="card-body">
+<!--                                        <h4 class="card-title">Card title</h4>-->
+<!--                                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                                        <div class="container mx-1">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p>
+                                                        Address:
+                                                    </p>
+                                                    <p>
+                                                        Floor:
+                                                    </p>
+                                                    <p>
+                                                        Number:
+                                                    </p>
+                                                    <p>
+                                                        Size:
+                                                    </p>
+                                                </div>
+                                                <div class="col">
+                                                    <p>
+                                                        <span th:text="${room.address}"></span>
+                                                    </p>
+                                                    <p>
+                                                        <span th:text="${room.floor}"></span>
+                                                    </p>
+                                                    <p>
+                                                        <span th:text="${room.num}"></span>
+                                                    </p>
+                                                    <p>
+                                                        <span th:text="${room.size}"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <p>
+                                                <a th:href="@{/room_view(roomId=${room.id})}" class="btn btn-info">View Details</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Available</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mt-3" th:each="room_, iter_ : ${allRoomsForm}" th:if="${iter_.index % 2 == 1}">
+                            <div class="card">
+                                <div class="card-horizontal">
+                                    <div class="img-square-wrapper">
+                                        <img class="" th:src="${room_.link}" width="270" height="150" alt="Card image cap">
+                                    </div>
+                                    <div class="card-body">
+<!--                                        <h4 class="card-title">Card title</h4>-->
+<!--                                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                                        <div class="container mx-1">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p>
+                                                        Address:
+                                                    </p>
+                                                    <p>
+                                                        Floor:
+                                                    </p>
+                                                    <p>
+                                                        Number:
+                                                    </p>
+                                                    <p>
+                                                        Size:
+                                                    </p>
+                                                </div>
+                                                <div class="col">
+                                                    <p>
+                                                        <span th:text="${room_.address}"></span>
+                                                    </p>
+                                                    <p>
+                                                        <span th:text="${room_.floor}"></span>
+                                                    </p>
+                                                    <p>
+                                                        <span th:text="${room_.num}"></span>
+                                                    </p>
+                                                    <p>
+                                                        <span th:text="${room_.size}"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <p>
+                                                <a th:href="@{/room_view(roomId=${room_.id})}" class="btn btn-info">View Details</a>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Available</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <li class="list-group-item pb-1">-->
+<!--                <div>-->
+<!--                    <img th:src="${room.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >-->
+<!--                    <p>-->
+<!--                        Address:-->
+<!--                        <span th:text="${room.address}"></span>-->
+<!--                    </p>-->
+<!--                    <p style="float: right; padding-top: 10px;">-->
+<!--                        <a th:href="@{/room_view(roomId=${room.id})}" class="btn btn-info">View Details</a>-->
+<!--                    </p>-->
+<!--                    <p>-->
+<!--                        Floor:-->
+<!--                        <span th:text="${room.floor}"></span>-->
+<!--                    </p>-->
+<!--                    <p>-->
+<!--                        Number:-->
+<!--                        <span th:text="${room.num}"></span>-->
+<!--                    </p>-->
+<!--                    <p>-->
+<!--                        Size:-->
+<!--                        <span th:text="${room.size}"></span>-->
+<!--                    </p>-->
+<!--                </div>-->
+<!--            </li>-->
         </ul>
     </div>
 </div>
