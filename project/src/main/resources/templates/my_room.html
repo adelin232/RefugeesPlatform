@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorator="layouts/default">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Room</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/monokai-sublime.min.css"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>-->
+    <!--    <script>hljs.initHighlightingOnLoad();</script>-->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.22/"></script>
+
+    <script th:inline="javascript">
+
+        require([
+            "esri/config",
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/Graphic",
+            "esri/rest/locator"
+
+        ], function(esriConfig, Map, MapView, Graphic, locator) {
+
+            esriConfig.apiKey = "AAPKfc023320ea5b4fb9955d7e74a5623fb4KZHfa6kn7i--Jv-1qxWZfL067XASOUpPONXgOqcnsQU8AgpZer-JDLilHLOJL9pY";
+
+            const map = new Map({
+                basemap: "arcgis-navigation" //Basemap layer service
+            });
+
+            var roomForm_lat = /*[[${roomForm.lat}]]*/ 0.00;
+            var roomForm_lng = /*[[${roomForm.lon}]]*/ 0.00;
+
+            const view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [roomForm_lng, roomForm_lat], //Longitude, latitude
+                zoom: 8
+            });
+
+            const point = {
+                type: "point",
+                longitude: roomForm_lng,
+                latitude: roomForm_lat
+            };
+
+            addGraphic(point);
+
+            const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+
+            const params = {
+                location: point
+            };
+
+            locator.locationToAddress(serviceUrl, params)
+                .then(function(response) { // Show the address found
+                    const address = response.address;
+                    showAddress(address, point);
+                }, function(err) { // Show no address found
+                    showAddress("No address found.", point);
+                });
+
+            function addGraphic(point) {
+                const graphic = new Graphic({
+                    symbol: {
+                        type: "simple-marker",
+                        color: "white",
+                        size: "12px"
+                    },
+                    geometry: point
+                });
+                view.graphics.add(graphic);
+            }
+
+            function showAddress(address, pt) {
+                view.popup.open({
+                    title:  + Math.round(pt.longitude * 100000)/100000 + ", " + Math.round(pt.latitude * 100000)/100000,
+                    content: address,
+                    location: pt
+                });
+            }
+        });
+    </script>
+</head>
+<style>
+    .background {
+        position: center;
+    }
+    .background::before {
+        content: "";
+        background-image: url('/images/ukraine.png');
+        /*background-image: url('https://wallpaperbat.com/img/567173-europe-wallpaper-music-hq-europe-picture-4k-wallpaper-2019.png');*/
+        background-size: cover;
+        background-repeat: repeat-y;
+        position: absolute;
+        top: 72px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        opacity: 0.1;
+    }
+    .content {
+        position: relative;
+        /*text-align: center;*/
+    }
+    html {
+        position: relative;
+        min-height: 100%;
+        padding-bottom: 0px;
+    }
+    body {
+        margin-bottom: 0px;
+    }
+    .mx-7 {
+        padding-left: 30rem;
+        padding-right: 20rem;
+    }
+    #viewDiv {
+        padding: 0;
+        margin: auto;
+        height: 100%;
+        width: 100%;
+    }
+    ul {
+        list-style-type: none; /* Remove bullets */
+        padding: 0;
+        margin: 0; /* Remove margins */
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+    }
+    .mx-6 {
+        padding-left: 20rem;
+        padding-right: 20rem;
+    }
+    .card-horizontal {
+        display: flex;
+        flex: 1 1 auto;
+    }
+</style>
+<body>
+<header>
+    <div>
+        <nav th:replace="fragments/navbar"></nav>
+    </div>
+</header>
+
+<div class="background">
+    <div class="content">
+        <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
+        <div class="container-fluid mx-auto mt-3" style="max-width: 1280px;">
+            <div class="card">
+                <div class="card-horizontal">
+                    <div class="img-square-wrapper">
+                        <img class="rounded img-fluid" th:src="${roomForm.link}" width="540" height="300" alt="Card image cap">
+                    </div>
+                    <div class="card-body">
+                        <div class="container mx-1" style="font-weight: bold;">
+                            <div class="row">
+                                <div class="col">
+                                    <p>
+                                        Address:
+                                    </p>
+                                    <p>
+                                        Floor:
+                                    </p>
+                                    <p>
+                                        Number:
+                                    </p>
+                                    <p>
+                                        Size:
+                                    </p>
+                                </div>
+                                <div class="col">
+                                    <p>
+                                        <span th:text="${roomForm.address}"></span>
+                                    </p>
+                                    <p>
+                                        <span th:text="${roomForm.floor}"></span>
+                                    </p>
+                                    <p>
+                                        <span th:text="${roomForm.num}"></span>
+                                    </p>
+                                    <p>
+                                        <span th:text="${roomForm.size}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="py-3">
+                <div id="viewDiv" style="position: relative; min-width: 675px; max-width: 1200px; height: 675px; border:2px solid #575757"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:insert="fragments/footer"></div>
+
+</body>
+
+</html>
