@@ -14,9 +14,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>-->
+<!--    <script>hljs.initHighlightingOnLoad();</script>-->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.22/"></script>
@@ -92,50 +94,6 @@
         });
     </script>
 
-    <!-- #TODO? pentru a afisa locatia ca String -->
-<!--    <script th:inline="javascript">-->
-<!--    require([-->
-<!--        "esri/config",-->
-<!--        "esri/Map",-->
-<!--        "esri/views/MapView",-->
-<!--        "esri/rest/locator"-->
-
-<!--    ], function(esriConfig, Map, MapView, locator) {-->
-
-<!--        esriConfig.apiKey = "AAPKfc023320ea5b4fb9955d7e74a5623fb4KZHfa6kn7i&#45;&#45;Jv-1qxWZfL067XASOUpPONXgOqcnsQU8AgpZer-JDLilHLOJL9pY";-->
-
-<!--        const map = new Map({-->
-<!--            basemap: "arcgis-navigation"-->
-<!--        });-->
-
-<!--        const view = new MapView({-->
-<!--            container: "viewDiv_hidden",-->
-<!--            map: map,-->
-<!--            center: [26.10, 44.43],-->
-<!--            zoom: 10-->
-<!--        });-->
-
-<!--        const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";-->
-
-<!--        var lat = /*[[${roomForm.lat}]]*/ 44.43;-->
-<!--        var lon = /*[[${roomForm.lon}]]*/ 26.10;-->
-<!--        const point = { //Create a point-->
-<!--            type: "point",-->
-<!--            longitude: lon,-->
-<!--            latitude: lat-->
-<!--        };-->
-<!--        const params = {-->
-<!--            location: point-->
-<!--        };-->
-<!--        locator.locationToAddress(serviceUrl, params).then(function(response) { // Show the address found-->
-<!--            var address = response.address;-->
-<!--            document.getElementById('truck_address').innerHTML = address;-->
-<!--        }, function(err) { // Show no address found-->
-<!--            document.getElementById('truck_address').innerHTML = "No address found";-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
-
 </head>
 <style>
     .background {
@@ -166,13 +124,6 @@
     body {
         margin-bottom: 0px;
     }
-    div {
-        padding: 0;
-        margin: 0; /* Remove margins */
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: bold;
-        font-size: 18px;
-    }
     .mx-7 {
         padding-left: 30rem;
         padding-right: 20rem;
@@ -182,6 +133,21 @@
         margin: auto;
         height: 100%;
         width: 100%;
+    }
+    ul {
+        list-style-type: none; /* Remove bullets */
+        padding: 0;
+        margin: 0; /* Remove margins */
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+    }
+    .mx-6 {
+        padding-left: 20rem;
+        padding-right: 20rem;
+    }
+    .card-horizontal {
+        display: flex;
+        flex: 1 1 auto;
     }
 </style>
 <body>
@@ -196,61 +162,119 @@
 <div class="background">
     <div class="content">
         <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
-        <div class="mx-7 pt-5">
-            <img th:src="${roomForm.link}" alt="My Image" width="300" height="150" style="float: left; margin-right: 20px;" >
-            <p>
-                Address:
-                <span th:text="${roomForm.address}"></span>
-            </p>
-            <p>
-                Floor:
-                <span th:text="${roomForm.floor}"></span>
-            </p>
-            <p>
-                Number:
-                <span th:text="${roomForm.num}"></span>
-            </p>
-            <p>
-                Size:
-                <span th:text="${roomForm.size}"></span>
-            </p>
-        </div>
-        <div class="mx-7 pb-5">
-            <form method="POST" class="form-signin mt-5 pb-3" th:object="${rentalForm}" onSubmit="window.location.reload();">
-<!--                <input class="form-control" type="text" th:attr="value = ${roomForm.id}" th:field="*{roomId}">-->
-                <input type="hidden" th:field="*{roomId}" th:value="${roomForm.id}"/>
-                <div class="form-group row">
-                    <div class="col-md-4 ">
-                        <label for="startDate">Date of start</label>
-                        <div class="input-group date">
-                            <input type="text" class="form-control" id="startDate" autocomplete="off" th:field="*{startDate}"
-                                   placeholder="DD/MM/YYYY" autofocus="true" required/>
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-4">
-                        <label for="endDate">Date of end</label>
-                        <div class="input-group date">
-                            <input type="text" class="form-control" id="endDate" autocomplete="off" th:field="*{endDate}"
-                                   placeholder="DD/MM/YYYY" autofocus="true" required/>
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <button class="btn btn-primary" type="submit">Rent</button>
-<!--                <div>-->
-<!--                    <a th:href="@{/room_view(roomId=${roomForm.id})}" class="btn btn-info">Rent</a>-->
-<!--                </div>-->
-            </form>
+        <div class="container-fluid mx-auto mt-3" style="max-width: 1280px;">
+
+            <div class="card">
+                <div class="card-horizontal">
+                    <div class="img-square-wrapper">
+                        <img class="rounded img-fluid" th:src="${roomForm.link}" width="540" height="300" alt="Card image cap">
+                    </div>
+                    <div class="card-body">
+                        <div class="container mx-1">
+                            <div class="row">
+                                <div class="col">
+                                    <p>
+                                        Address:
+                                    </p>
+                                    <p>
+                                        Floor:
+                                    </p>
+                                    <p>
+                                        Number:
+                                    </p>
+                                    <p>
+                                        Size:
+                                    </p>
+                                </div>
+                                <div class="col">
+                                    <p>
+                                        <span th:text="${roomForm.address}"></span>
+                                    </p>
+                                    <p>
+                                        <span th:text="${roomForm.floor}"></span>
+                                    </p>
+                                    <p>
+                                        <span th:text="${roomForm.num}"></span>
+                                    </p>
+                                    <p>
+                                        <span th:text="${roomForm.size}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Choose Interval
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
+                        <div class="card-body">
+                            <div class="mx-4 pb-3">
+                                <form method="POST" class="form-signin mt-3 pb-2" th:object="${rentalForm}" onSubmit="window.location.reload();">
+                                    <!--                <input class="form-control" type="text" th:attr="value = ${roomForm.id}" th:field="*{roomId}">-->
+                                    <input type="hidden" th:field="*{roomId}" th:value="${roomForm.id}"/>
+                                    <div class="form-group row">
+                                        <div class="col ">
+                                            <label for="startDate">Date of start</label>
+                                            <div class="input-group date">
+                                                <input type="text" class="form-control" id="startDate" autocomplete="off" th:field="*{startDate}"
+                                                       placeholder="DD/MM/YYYY" autofocus="true" required/>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col">
+                                            <label for="endDate">Date of end</label>
+                                            <div class="input-group date">
+                                                <input type="text" class="form-control" id="endDate" autocomplete="off" th:field="*{endDate}"
+                                                       placeholder="DD/MM/YYYY" autofocus="true" required/>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary mt-1" type="submit">Rent</button>
+                                    <!--                <div>-->
+                                    <!--                    <a th:href="@{/room_view(roomId=${roomForm.id})}" class="btn btn-info">Rent</a>-->
+                                    <!--                </div>-->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                View Location
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
+                        <div class="card-body">
+                            <div id="viewDiv" style="position: relative; min-width: 675px; max-width: 1200px; height: 675px; border:2px solid #575757"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div id="viewDiv" style="position: relative; width: 1200px; height: 675px; border:2px solid #575757; padding-top: 5px; padding-bottom: 5px;"></div>
+
     </div>
 </div>
 
