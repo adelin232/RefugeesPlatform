@@ -66,7 +66,7 @@ public class RoomController {
 
     @PostMapping("/rooms")
     @Transactional
-    public String rooms(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm) {
+    public String rooms(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm, @ModelAttribute("rentalForm") Rental rentalForm) {
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -126,7 +126,7 @@ public class RoomController {
 
     @PostMapping("/room_view")
     @Transactional
-    public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm, @ModelAttribute("rentalForm") Rental rentalForm) {
+    public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId, @ModelAttribute("rentalForm") Rental rentalForm) {
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -137,10 +137,11 @@ public class RoomController {
                 if (user == null) {
                     return "index";
                 } else {
-                    model.addAttribute("roomForm", roomForm);
+                    Room room = roomService.getRoom(roomId);
+                    model.addAttribute("roomForm", room);
+
                     rentalForm.setUserId(user.getId());
-                    rentalForm.setRoomId(1L);
-//                    rentalForm.setRoomId(roomForm.getId());
+                    rentalForm.setRoomId(roomId);
                     rentalService.createRental(rentalForm);
                     model.addAttribute("rentalForm", rentalForm);
                 }
@@ -153,4 +154,6 @@ public class RoomController {
 
         return "room_view";
     }
+
+
 }

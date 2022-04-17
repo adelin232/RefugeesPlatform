@@ -171,7 +171,7 @@
                         <img class="rounded img-fluid" th:src="${roomForm.link}" width="540" height="300" alt="Card image cap">
                     </div>
                     <div class="card-body">
-                        <div class="container mx-1">
+                        <div class="container mx-1" style="font-weight: bold;">
                             <div class="row">
                                 <div class="col">
                                     <p>
@@ -219,10 +219,8 @@
 
                     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
                         <div class="card-body">
-                            <div class="mx-4 pb-3">
-                                <form method="POST" class="form-signin mt-3 pb-2" th:object="${rentalForm}" onSubmit="window.location.reload();">
-                                    <!--                <input class="form-control" type="text" th:attr="value = ${roomForm.id}" th:field="*{roomId}">-->
-                                    <input type="hidden" th:field="*{roomId}" th:value="${roomForm.id}"/>
+                            <div class="mx-4 pb-3" style="font-weight: bold;">
+                                <form id="rental-form" method="POST" class="form-signin mt-3 pb-2" th:object="${rentalForm}" th:action="@{/room_view(roomId=${roomForm.id})}">
                                     <div class="form-group row">
                                         <div class="col ">
                                             <label for="startDate">Date of start</label>
@@ -249,9 +247,6 @@
                                     </div>
 
                                     <button class="btn btn-primary mt-1" type="submit">Rent</button>
-                                    <!--                <div>-->
-                                    <!--                    <a th:href="@{/room_view(roomId=${roomForm.id})}" class="btn btn-info">Rent</a>-->
-                                    <!--                </div>-->
                                 </form>
                             </div>
                         </div>
