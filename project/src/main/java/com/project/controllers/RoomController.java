@@ -49,9 +49,6 @@ public class RoomController {
                     is_new_user = 1;
                 } else {
                     model.addAttribute("roomForm", new Room());
-
-                    String redirect = getRedirect(model, user);
-                    if (redirect != null) return redirect;
                 }
 
                 model.addAttribute("userForm", user);

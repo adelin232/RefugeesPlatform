@@ -28,4 +28,7 @@ public class User {
     private String lastName;
 
     private String fullName;
+
+//    TODO
+//    private Boolean isAdmin;
 }
