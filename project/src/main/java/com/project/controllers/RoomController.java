@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class RoomController {
@@ -142,37 +143,6 @@ public class RoomController {
         return null;
     }
 
-//    @PostMapping("/room_view")
-//    @Transactional
-//    public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId, @ModelAttribute("rentalForm") Rental rentalForm) {
-//        if (principal != null) {
-//            Map<String, Object> claims = principal.getClaims();
-//
-//            if (claims.containsKey("email")) {
-//                String email = (String) claims.get("email");
-//                User user = userService.findUserByEmail(email);
-//
-//                if (user == null) {
-//                    return "index";
-//                } else {
-//                    Room room = roomService.getRoom(roomId);
-//                    model.addAttribute("roomForm", room);
-//
-//                    rentalForm.setUserId(user.getId());
-//                    rentalForm.setRoomId(roomId);
-//                    rentalService.createRental(rentalForm);
-//                    model.addAttribute("rentalForm", rentalForm);
-//                }
-//
-//                model.addAttribute("userForm", user);
-//            }
-//
-//            model.addAttribute("profile", principal.getClaims());
-//        }
-//
-//        return "room_view";
-//    }
-
     @GetMapping("/my_room")
     @Transactional
     public String handleMyRoomView(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId) {
@@ -190,11 +160,15 @@ public class RoomController {
                     Rental rental = rentalService.findRentalByUserId(user.getId());
 
                     if (rental == null) {
-                        Room room = roomService.getRoom(roomId);
-                        model.addAttribute("roomForm", room);
-                        return "rooms";
+                        return "redirect:rooms";
                     } else {
-                        Room room = roomService.getRoom(rental.getRoomId());
+                        Long roomId_ = rental.getRoomId();
+
+                        if (!Objects.equals(roomId_, roomId)) {
+                            return "redirect:my_room?roomId=" + roomId_;
+                        }
+
+                        Room room = roomService.getRoom(roomId_);
                         model.addAttribute("roomForm", room);
                     }
                 }
