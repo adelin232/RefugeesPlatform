@@ -17,6 +17,7 @@ import java.util.Map;
 /**
  * Controller for the news page.
  */
+//a doua medificare
 @Controller
 public class NewsController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
