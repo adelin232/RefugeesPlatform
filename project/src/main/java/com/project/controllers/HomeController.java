@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.transaction.Transactional;
 import java.util.Map;
-
+//modificare Simi
 /**
  * Controller for the home page.
  */
