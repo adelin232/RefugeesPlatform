@@ -60,9 +60,9 @@
                             <img th:src="${profile?.get('picture')}"  alt="Profile picture" class="nav-user-profile rounded-circle" width="50"/>
                         </a>
                         <div class="dropdown-menu dropdown-menu-left">
-<!--                            TODO firstName + lastName-->
                             <!-- Show the user's full name from the id token here -->
-                            <div class="dropdown-header" th:text="${userForm?.fullName}"></div>
+<!--                            <div class="dropdown-header" th:text="${userForm?.fullName}"></div>-->
+                            <h6 class="d-inline-block" th:text="${userForm?.firstName} + ' ' + ${userForm?.lastName}"></h6>
                             <a href="/profile" class="dropdown-item dropdown-profile">
                                 <i class="fas fa-user mr-3"></i> Profile
                             </a>
@@ -91,9 +91,9 @@
                         <span class="user-info">
                         <!-- Profile image should be set to the profile picture from the id token -->
                             <img th:src="${profile?.get('picture')}" alt="Profile picture" class="nav-user-profile d-inline-bloc rounded-circle mr-3" width="50"/>
-<!--                            TODO firstName + lastName-->
                             <!-- Show the user's full name from the id token here-->
-                            <h6 class="d-inline-block" th:text="${userForm?.fullName}"></h6>
+<!--                            <h6 class="d-inline-block" th:text="${userForm?.fullName}"></h6>-->
+                            <h6 class="d-inline-block" th:text="${userForm?.firstName} + ' ' + ${userForm?.lastName}"></h6>
                         </span>
                     </li>
                     <li>

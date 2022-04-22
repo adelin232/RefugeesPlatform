@@ -21,7 +21,7 @@ public class UserTests {
     @Test
     @DisplayName("Insert user should work")
     void insertUserTest() {
-        User user = new User(1L, "test@test.com", "0747553042", "Narcis-Adelin", "Miulet", "Narcis-Adelin Miulet");
+        User user = new User(1L, "test@test.com", "0747553042", "Narcis-Adelin", "Miulet", false);
 
         userRepository.save(user);
         assertThat(userRepository.findById(user.getId())).hasValue(user);

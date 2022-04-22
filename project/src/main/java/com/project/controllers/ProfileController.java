@@ -72,7 +72,8 @@ public class ProfileController {
                 String email = (String) claims.get("email");
                 User user = userRepository.findUserByEmail(email);
                 userForm.setEmail(email);
-                userForm.setFullName(userForm.getFirstName() + " " + userForm.getLastName());
+//                userForm.setFullName(userForm.getFirstName() + " " + userForm.getLastName());
+                userForm.setIsAdmin(false);
 
                 if (user == null) {
                     userService.createUser(userForm);
