@@ -75,7 +75,7 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
-                    return "redirect:index";
+                    return "redirect:/index.html";
                 } else {
                     roomService.createRoom(roomForm);
                     model.addAttribute("roomForm", roomForm);
