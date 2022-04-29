@@ -40,6 +40,7 @@ public class RoomController {
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
+            Rental rental;
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
@@ -49,16 +50,19 @@ public class RoomController {
                     is_new_user = 1;
                 } else {
                     model.addAttribute("roomForm", new Room());
+
+                    rental = rentalService.findRentalByUserId(user.getId());
+
+                    if (rental != null)
+                        model.addAttribute("rentalForm", rental);
                 }
 
                 model.addAttribute("userForm", user);
             }
 
             List<Room> roomsList = roomService.getRooms();
-//            List<Rental> rentalList = rentalService.getRentals();
 
             model.addAttribute("allRoomsForm", roomsList);
-//            model.addAttribute("allRentalsForm", rentalList);
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
         }

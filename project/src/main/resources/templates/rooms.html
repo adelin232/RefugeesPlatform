@@ -111,7 +111,9 @@
                                             </div>
                                         </div>
                                         <p>
-                                            <a th:href="@{/room_view(roomId=${room.id})}" class="btn btn-info">View Details</a>
+                                            <div th:if="${rentalForm == null}">
+                                                <a th:href="@{/room_view(roomId=${room.id})}" class="btn btn-info">View Details</a>
+                                            </div>
                                         </p>
                                     </div>
                                 </div>
@@ -160,9 +162,9 @@
                                             </div>
                                         </div>
                                         <p>
-<!--                                            <div th:if="${allRentalsForm?}">-->
+                                            <div th:if="${rentalForm == null}">
                                                 <a th:href="@{/room_view(roomId=${room_.id})}" class="btn btn-info">View Details</a>
-<!--                                            </div>-->
+                                            </div>
                                         </p>
                                     </div>
 
