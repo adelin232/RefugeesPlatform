@@ -57,7 +57,7 @@ public class UserController {
                     is_new_user = 1;
                 } else {
                     if (!user.getIsAdmin()) {
-                        return "redirect:/index.html";
+                        return "redirect:index";
                     }
                 }
 

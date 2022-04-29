@@ -160,7 +160,9 @@
                                             </div>
                                         </div>
                                         <p>
-                                            <a th:href="@{/room_view(roomId=${room_.id})}" class="btn btn-info">View Details</a>
+<!--                                            <div th:if="${allRentalsForm?}">-->
+                                                <a th:href="@{/room_view(roomId=${room_.id})}" class="btn btn-info">View Details</a>
+<!--                                            </div>-->
                                         </p>
                                     </div>
 

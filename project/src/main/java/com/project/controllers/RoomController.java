@@ -55,8 +55,10 @@ public class RoomController {
             }
 
             List<Room> roomsList = roomService.getRooms();
+//            List<Rental> rentalList = rentalService.getRentals();
 
             model.addAttribute("allRoomsForm", roomsList);
+//            model.addAttribute("allRentalsForm", rentalList);
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
         }
@@ -75,7 +77,7 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
-                    return "redirect:/index.html";
+                    return "redirect:index";
                 } else {
                     roomService.createRoom(roomForm);
                     model.addAttribute("roomForm", roomForm);
@@ -191,7 +193,7 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
-                    return "index";
+                    return "redirect:index";
                 } else {
                     Room room = roomService.getRoom(roomId);
                     model.addAttribute("roomForm", room);

@@ -31,7 +31,7 @@ public class HomeController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/")
+    @GetMapping({"/", "/index"})
     @Transactional
     public String home(Model model, @AuthenticationPrincipal OidcUser principal) {
         if (principal != null) {
