@@ -216,4 +216,32 @@ public class RoomController {
 
         return "my_room";
     }
+
+    @PostMapping("/room_edit")
+    @Transactional
+    public String editRoom(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm) {
+        if (principal != null) {
+            Map<String, Object> claims = principal.getClaims();
+
+            if (claims.containsKey("email")) {
+                String email = (String) claims.get("email");
+                User user = userService.findUserByEmail(email);
+
+                if (user == null) {
+                    return "redirect:index";
+                } else {
+//                    Rental rental = rentalService.findRentalByUserId(user.getId());
+//
+//                    roomForm.setId(rental.getRoomId());
+                    roomService.updateRoom(roomForm);
+                }
+
+                model.addAttribute("roomForm", roomForm);
+            }
+
+            model.addAttribute("profile", principal.getClaims());
+        }
+
+        return "redirect:rooms";
+    }
 }

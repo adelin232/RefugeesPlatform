@@ -66,6 +66,8 @@
     </div>
 </header>
 
+<div th:replace="fragments/scripts"></div>
+
 <div class="background">
     <div class="content">
         <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>

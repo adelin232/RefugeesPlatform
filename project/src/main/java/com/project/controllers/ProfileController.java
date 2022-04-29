@@ -1,9 +1,6 @@
 package com.project.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.models.User;
-import com.project.repositories.UserRepository;
 import com.project.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +17,6 @@ import javax.transaction.Transactional;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * Controller for requests to the {@code /profile} resource. Populates the model with the claims from the
- * {@linkplain OidcUser} for use by the view.
- */
 @Controller
 public class ProfileController {
 
@@ -31,17 +24,6 @@ public class ProfileController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-//    @GetMapping("/profile")
-//    public String profile(Model model, @AuthenticationPrincipal OidcUser oidcUser) {
-//        model.addAttribute("profile", oidcUser.getClaims());
-//        model.addAttribute("profileJson", claimsToJson(oidcUser.getClaims()));
-//
-//        return "profile";
-//    }
 
     @GetMapping("/profile")
     @Transactional
@@ -51,7 +33,7 @@ public class ProfileController {
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userRepository.findUserByEmail(email);
+                User user = userService.findUserByEmail(email);
 
                 model.addAttribute("userForm", Objects.requireNonNullElseGet(user, User::new));
             }
@@ -70,9 +52,8 @@ public class ProfileController {
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userRepository.findUserByEmail(email);
+                User user = userService.findUserByEmail(email);
                 userForm.setEmail(email);
-//                userForm.setFullName(userForm.getFirstName() + " " + userForm.getLastName());
                 userForm.setIsAdmin(false);
 
                 if (user == null) {
@@ -88,17 +69,5 @@ public class ProfileController {
         }
 
         return "profile";
-    }
-
-    private String claimsToJson(Map<String, Object> claims) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.findAndRegisterModules();
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(claims);
-        } catch (JsonProcessingException jpe) {
-            log.error("Error parsing claims to JSON", jpe);
-        }
-
-        return "Error parsing claims to JSON.";
     }
 }

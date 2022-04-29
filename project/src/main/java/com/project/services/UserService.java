@@ -19,12 +19,13 @@ public class UserService {
 
     public void updateUser(User new_user) {
         User user = getUser(new_user.getEmail());
+
         user.setFirstName(new_user.getFirstName());
         user.setLastName(new_user.getLastName());
-//        user.setFullName(new_user.getFullName());
         user.setIsAdmin(new_user.getIsAdmin());
         user.setEmail(new_user.getEmail());
         user.setPhone(new_user.getPhone());
+
         userRepository.save(user);
     }
 
