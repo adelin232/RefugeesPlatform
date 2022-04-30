@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 public class RoomController {
@@ -33,6 +34,8 @@ public class RoomController {
     @Autowired
     private RentalService rentalService;
 
+    @Autowired
+    private HomeController homeController;
 
     @GetMapping("/rooms")
     @Transactional
@@ -40,28 +43,22 @@ public class RoomController {
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
+            User user;
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userService.findUserByEmail(email);
+                user = userService.findUserByEmail(email);
 
                 if (user == null) {
                     is_new_user = 1;
                 } else {
-                    model.addAttribute("roomForm", new Room());
-
-                    Rental rental = rentalService.findRentalByUserId(user.getId());
-
-                    if (rental != null)
-                        model.addAttribute("rentalForm", rental);
+                    homeController.addForms(model, user);
+                    addRentalAndRoomsForm(model, user);
                 }
 
                 model.addAttribute("userForm", user);
             }
 
-            List<Room> roomsList = roomService.getRooms();
-
-            model.addAttribute("allRoomsForm", roomsList);
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
         }
@@ -86,22 +83,33 @@ public class RoomController {
                     roomService.createRoom(roomForm);
                     model.addAttribute("roomForm", roomForm);
 
-                    Rental rental = rentalService.findRentalByUserId(user.getId());
-
-                    if (rental != null)
-                        model.addAttribute("rentalForm", rental);
+                    addRentalAndRoomsForm(model, user);
                 }
 
                 model.addAttribute("userForm", user);
             }
 
-            List<Room> roomsList = roomService.getRooms();
-
-            model.addAttribute("allRoomsForm", roomsList);
             model.addAttribute("profile", principal.getClaims());
         }
 
         return "rooms";
+    }
+
+    private void addRentalAndRoomsForm(Model model, User user) {
+        Rental rental = rentalService.findRentalByUserId(user.getId());
+
+        if (rental != null) {
+            model.addAttribute("rentalForm", rental);
+        }
+
+        List<Room> roomsList = roomService.getRooms();
+
+        if (!user.getIsAdmin()) {
+            roomsList = roomsList.stream().filter(Room::getIsAvail)
+                    .collect(Collectors.toList());
+        }
+
+        model.addAttribute("allRoomsForm", roomsList);
     }
 
     @GetMapping("/room_view")
@@ -119,10 +127,21 @@ public class RoomController {
                     is_new_user = 1;
                 } else {
                     Room room = roomService.getRoom(roomId);
-                    model.addAttribute("roomForm", room);
+                    Rental rental = rentalService.findRentalByUserId(user.getId());
 
-                    String redirect = getRedirect(model, user);
-                    if (redirect != null) return redirect;
+                    if (rental == null) {
+                        room.setIsAvail(false);
+                        model.addAttribute("rentalForm", new Rental());
+                    } else {
+                        Long roomId_ = rental.getRoomId();
+                        String redirect = "redirect:my_room?roomId=" + roomId_;
+
+                        model.addAttribute("rentalForm", rental);
+
+                        return redirect;
+                    }
+
+                    model.addAttribute("roomForm", room);
                 }
 
                 model.addAttribute("userForm", user);
@@ -133,22 +152,6 @@ public class RoomController {
         }
 
         return "room_view";
-    }
-
-    private String getRedirect(Model model, User user) {
-        Rental rental = rentalService.findRentalByUserId(user.getId());
-
-        if (rental == null) {
-            model.addAttribute("rentalForm", new Rental());
-        } else {
-            Long roomId = rental.getRoomId();
-            String redirect = "redirect:my_room?roomId=" + roomId;
-
-            model.addAttribute("rentalForm", rental);
-            return redirect;
-        }
-
-        return null;
     }
 
     @GetMapping("/my_room")
@@ -170,7 +173,7 @@ public class RoomController {
                     if (rental == null) {
                         return "redirect:rooms";
                     } else {
-                        Long roomId_ = rental.getRoomId();
+                        long roomId_ = rental.getRoomId();
 
                         if (!Objects.equals(roomId_, roomId)) {
                             return "redirect:my_room?roomId=" + roomId_;

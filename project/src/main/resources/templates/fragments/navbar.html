@@ -62,19 +62,21 @@
                                 data-toggle="dropdown"
                         >
                             <!-- Profile image should be set to the profile picture from the id token -->
-                            <img th:src="${profile?.get('picture')}"  alt="Profile picture" class="nav-user-profile rounded-circle" width="100"/>
+                            <img th:src="${profile?.get('picture')}"  alt="Profile picture" class="nav-user-profile rounded-circle" width="50"/>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-left">
+                        <div class="dropdown-menu dropdown-menu-left" style="width: 200px; text-align: center;">
                             <!-- Show the user's full name from the id token here -->
 <!--                            <div class="dropdown-header" th:text="${userForm?.fullName}"></div>-->
                             <h6 class="d-inline-block" th:text="' ' + ${userForm?.firstName} + ' ' + ${userForm?.lastName} + ' '"></h6>
                             <a href="/profile" class="dropdown-item dropdown-profile">
                                 <i class="fas fa-user mr-3"></i> Profile
                             </a>
-
 <!--                            <a href="/rooms" class="dropdown-item dropdown-profile">-->
 <!--                                <i class="fas fa-hotel mr-3"></i> Rooms-->
 <!--                            </a>-->
+                            <a th:if="${roomForm}" th:href="@{/my_room(roomId=${roomForm?.id})}" class="dropdown-item">
+                                <i class="fas fa-hotel mr-3"></i> My Room
+                            </a>
                             <a id="qsLogoutBtn" th:href="@{/logout}" class="dropdown-item">
                                 <i class="fas fa-power-off mr-3"></i> Log out
                             </a>
@@ -95,7 +97,7 @@
                     <li class="nav-item">
                         <span class="user-info">
                         <!-- Profile image should be set to the profile picture from the id token -->
-                            <img th:src="${profile?.get('picture')}" alt="Profile picture" class="nav-user-profile d-inline-bloc rounded-circle mr-3" width="100"/>
+                            <img th:src="${profile?.get('picture')}" alt="Profile picture" class="nav-user-profile d-inline-bloc rounded-circle mr-3" width="50"/>
                             <!-- Show the user's full name from the id token here-->
 <!--                            <h6 class="d-inline-block" th:text="${userForm?.fullName}"></h6>-->
                             <h6 class="d-inline-block" th:text="' ' + ${userForm?.firstName} + ' ' + ${userForm?.lastName} + ' '"></h6>
@@ -113,6 +115,10 @@
 <!--                        <i class="fas fa-hotel mr-3"></i>-->
 <!--                        <a th:href="@{/rooms}"> Rooms</a>-->
 <!--                    </li>-->
+                    <li th:if="${roomForm}">
+                        <i class="fas fa-hotel mr-3"></i>
+                        <a th:href="@{/my_room(roomId=${roomForm?.id})}"> My Room</a>
+                    </li>
                     <li>
                         <i class="fas fa-power-off mr-3"></i>
                         <a th:href="@{/logout}"> Log out</a>

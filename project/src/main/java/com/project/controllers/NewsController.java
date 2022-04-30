@@ -1,7 +1,7 @@
 package com.project.controllers;
 
 import com.project.models.User;
-import com.project.repositories.UserRepository;
+import com.project.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,10 @@ public class NewsController {
 //    private NewsService newsService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
+    @Autowired
+    private HomeController homeController;
 
     @GetMapping("/news")
     @Transactional
@@ -36,9 +39,13 @@ public class NewsController {
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userRepository.findUserByEmail(email);
+                User user = userService.findUserByEmail(email);
 
-                model.addAttribute("userForm", user);
+                if (user == null) {
+                    is_new_user = 1;
+                } else {
+                    homeController.addForms(model, user);
+                }
             }
 
             model.addAttribute("profile", principal.getClaims());

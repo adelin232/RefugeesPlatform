@@ -2,8 +2,11 @@ package com.project.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.models.Rental;
+import com.project.models.Room;
 import com.project.models.User;
-import com.project.repositories.UserRepository;
+import com.project.services.RentalService;
+import com.project.services.RoomService;
 import com.project.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +32,10 @@ public class HomeController {
     private UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
+    private RoomService roomService;
+
+    @Autowired
+    private RentalService rentalService;
 
     @GetMapping({"/", "/index"})
     @Transactional
@@ -40,25 +46,35 @@ public class HomeController {
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
-                User user = userRepository.findUserByEmail(email);
+                User user = userService.findUserByEmail(email);
 
                 if (user == null) {
                     is_new_user = 1;
-                    // TODO se continua in profile.html adaugarea de detalii si creare User in DB
-                    // TODO redirectionare catre profile.html daca este new_user
+                } else {
+                    addForms(model, user);
                 }
-
-                model.addAttribute("userForm", user);
             }
 
             model.addAttribute("profile", principal.getClaims());
-            // model.addAttribute("profileJson", claimsToJsonString);
+//            model.addAttribute("profileJson", claimsToJsonString);
             model.addAttribute("is_new_user", is_new_user);
         }
 
         return "index";
     }
 
+    public void addForms(Model model, User user) {
+        Rental rental = rentalService.findRentalByUserId(user.getId());
+
+        if (rental != null) {
+            Long roomId = rental.getRoomId();
+            Room room = roomService.getRoom(roomId);
+
+            model.addAttribute("roomForm", room);
+        }
+
+        model.addAttribute("userForm", user);
+    }
 
 
     private String claimsToJson(Map<String, Object> claims) {

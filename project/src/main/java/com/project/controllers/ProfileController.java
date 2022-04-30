@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.transaction.Transactional;
 import java.util.Map;
-import java.util.Objects;
 
 @Controller
 public class ProfileController {
@@ -24,6 +23,9 @@ public class ProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HomeController homeController;
 
     @GetMapping("/profile")
     @Transactional
@@ -35,7 +37,11 @@ public class ProfileController {
                 String email = (String) claims.get("email");
                 User user = userService.findUserByEmail(email);
 
-                model.addAttribute("userForm", Objects.requireNonNullElseGet(user, User::new));
+                if (user == null) {
+                    model.addAttribute("userForm", new User());
+                } else {
+                    homeController.addForms(model, user);
+                }
             }
 
             model.addAttribute("profile", principal.getClaims());

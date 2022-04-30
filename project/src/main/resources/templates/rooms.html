@@ -494,7 +494,12 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <small class="text-muted">Available</small>
+                                <div th:if="${room.isAvail}">
+                                    <small class="text-muted">Available</small>
+                                </div>
+                                <div th:if="!${room.isAvail}">
+                                    <small class="text-muted">Rented</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -625,7 +630,12 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <small class="text-muted">Available</small>
+                                <div th:if="${room_.isAvail}">
+                                    <small class="text-muted">Available</small>
+                                </div>
+                                <div th:if="!${room_.isAvail}">
+                                    <small class="text-muted">Rented</small>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -22,6 +22,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private HomeController homeController;
+
     @PostMapping("/users")
     public void createUser(@Valid @RequestBody User user) {
         userService.createUser(user);
@@ -59,9 +62,9 @@ public class UserController {
                     if (!user.getIsAdmin()) {
                         return "redirect:index";
                     }
-                }
 
-                model.addAttribute("userForm", user);
+                    homeController.addForms(model, user);
+                }
             }
 
             List<User> userList = userService.getUsers();
