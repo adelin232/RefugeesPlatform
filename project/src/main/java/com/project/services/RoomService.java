@@ -23,6 +23,10 @@ public class RoomService {
         room.setNum(new_room.getNum());
         room.setFloor(new_room.getFloor());
         room.setSize(new_room.getSize());
+        room.setLink(new_room.getLink());
+        room.setAddress(new_room.getAddress());
+        room.setLat(new_room.getLat());
+        room.setLon(new_room.getLon());
 
         roomRepository.save(room);
     }

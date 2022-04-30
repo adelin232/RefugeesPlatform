@@ -40,7 +40,6 @@ public class RoomController {
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
-            Rental rental;
 
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
@@ -51,7 +50,7 @@ public class RoomController {
                 } else {
                     model.addAttribute("roomForm", new Room());
 
-                    rental = rentalService.findRentalByUserId(user.getId());
+                    Rental rental = rentalService.findRentalByUserId(user.getId());
 
                     if (rental != null)
                         model.addAttribute("rentalForm", rental);
@@ -72,7 +71,7 @@ public class RoomController {
 
     @PostMapping("/rooms")
     @Transactional
-    public String rooms(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm, @ModelAttribute("rentalForm") Rental rentalForm) {
+    public String rooms(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm) {
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -83,8 +82,14 @@ public class RoomController {
                 if (user == null) {
                     return "redirect:index";
                 } else {
+                    roomForm.setIsAvail(true);
                     roomService.createRoom(roomForm);
                     model.addAttribute("roomForm", roomForm);
+
+                    Rental rental = rentalService.findRentalByUserId(user.getId());
+
+                    if (rental != null)
+                        model.addAttribute("rentalForm", rental);
                 }
 
                 model.addAttribute("userForm", user);
@@ -230,9 +235,6 @@ public class RoomController {
                 if (user == null) {
                     return "redirect:index";
                 } else {
-//                    Rental rental = rentalService.findRentalByUserId(user.getId());
-//
-//                    roomForm.setId(rental.getRoomId());
                     roomService.updateRoom(roomForm);
                 }
 

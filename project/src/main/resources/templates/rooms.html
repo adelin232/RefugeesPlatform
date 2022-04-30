@@ -11,6 +11,17 @@
     <link rel="stylesheet" href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/monokai-sublime.min.css"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>-->
+    <!--    <script>hljs.initHighlightingOnLoad();</script>-->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.22/"></script>
 </head>
 
 <style>
@@ -48,16 +59,221 @@
         font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
     }
-    .mx-6 {
-        padding-left: 20rem;
-        padding-right: 20rem;
-    }
-
     .card-horizontal {
         display: flex;
         flex: 1 1 auto;
     }
+    #viewDiv1 {
+        padding: 0;
+        margin: 0;
+
+        height: 600px;
+        width: 1138px;
+    }
+    #viewDiv2 {
+        padding: 0;
+        margin: 0;
+
+        height: 600px;
+        width: 1138px;
+    }
+    #viewDiv3 {
+        padding: 0;
+        margin: 0;
+
+        height: 600px;
+        width: 1138px;
+    }
 </style>
+
+<script>
+    require([
+        "esri/config",
+        "esri/Map",
+        "esri/views/MapView",
+
+        "esri/rest/locator"
+
+    ], function(esriConfig, Map, MapView, locator) {
+
+        esriConfig.apiKey = "AAPKfc023320ea5b4fb9955d7e74a5623fb4KZHfa6kn7i--Jv-1qxWZfL067XASOUpPONXgOqcnsQU8AgpZer-JDLilHLOJL9pY";
+
+        const map = new Map({
+            basemap: "arcgis-navigation"
+        });
+
+        const view = new MapView({
+            container: "viewDiv1",
+            map: map,
+            center: [26.10, 44.43],
+            zoom: 10
+        });
+
+        const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+        var lat = 0.0;
+        var lon = 0.0;
+
+        view.on("click", function(evt){
+            const params = {
+                location: evt.mapPoint
+
+            };
+
+            lat = parseFloat(evt.mapPoint.latitude.toFixed(5));
+            lon = parseFloat(evt.mapPoint.longitude.toFixed(5));
+
+            document.getElementById("fill1").onclick = function() {myFunction(lat, lon)};
+
+            function myFunction(lat, lon) {
+                document.getElementById("roomLat").value = lat;
+                document.getElementById("roomLon").value = lon;
+            }
+
+            locator.locationToAddress(serviceUrl, params)
+                .then(function(response) { // Show the address found
+                    const address = response.address;
+                    showAddress(address, evt.mapPoint);
+                }, function(err) { // Show no address found
+                    showAddress("No address found.", evt.mapPoint);
+                });
+
+        });
+
+        function showAddress(address, pt) {
+            view.popup.open({
+                title:  + Math.round(pt.longitude * 100000)/100000 + ", " + Math.round(pt.latitude * 100000)/100000,
+                content: address,
+                location: pt
+            });
+        }
+    });
+</script>
+
+<script>
+    require([
+        "esri/config",
+        "esri/Map",
+        "esri/views/MapView",
+
+        "esri/rest/locator"
+
+    ], function(esriConfig, Map, MapView, locator) {
+
+        esriConfig.apiKey = "AAPKfc023320ea5b4fb9955d7e74a5623fb4KZHfa6kn7i--Jv-1qxWZfL067XASOUpPONXgOqcnsQU8AgpZer-JDLilHLOJL9pY";
+
+        const map = new Map({
+            basemap: "arcgis-navigation"
+        });
+
+        const view = new MapView({
+            container: "viewDiv2",
+            map: map,
+            center: [26.10, 44.43],
+            zoom: 10
+        });
+
+        const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+        var lat = 0.0;
+        var lon = 0.0;
+
+        view.on("click", function(evt){
+            const params = {
+                location: evt.mapPoint
+
+            };
+
+            lat = parseFloat(evt.mapPoint.latitude.toFixed(5));
+            lon = parseFloat(evt.mapPoint.longitude.toFixed(5));
+
+            document.getElementById("fill2").onclick = function() {myFunction(lat, lon)};
+
+            function myFunction(lat, lon) {
+                document.getElementById("roomLat_").value = lat;
+                document.getElementById("roomLon_").value = lon;
+            }
+
+            locator.locationToAddress(serviceUrl, params)
+                .then(function(response) { // Show the address found
+                    const address = response.address;
+                    showAddress(address, evt.mapPoint);
+                }, function(err) { // Show no address found
+                    showAddress("No address found.", evt.mapPoint);
+                });
+
+        });
+
+        function showAddress(address, pt) {
+            view.popup.open({
+                title:  + Math.round(pt.longitude * 100000)/100000 + ", " + Math.round(pt.latitude * 100000)/100000,
+                content: address,
+                location: pt
+            });
+        }
+    });
+</script>
+
+<script>
+    require([
+        "esri/config",
+        "esri/Map",
+        "esri/views/MapView",
+
+        "esri/rest/locator"
+
+    ], function(esriConfig, Map, MapView, locator) {
+
+        esriConfig.apiKey = "AAPKfc023320ea5b4fb9955d7e74a5623fb4KZHfa6kn7i--Jv-1qxWZfL067XASOUpPONXgOqcnsQU8AgpZer-JDLilHLOJL9pY";
+
+        const map = new Map({
+            basemap: "arcgis-navigation"
+        });
+
+        const view = new MapView({
+            container: "viewDiv3",
+            map: map,
+            center: [26.10, 44.43],
+            zoom: 10
+        });
+
+        const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+        var lat = 0.0;
+        var lon = 0.0;
+
+        view.on("click", function(evt){
+            const params = {
+                location: evt.mapPoint
+
+            };
+
+            lat = parseFloat(evt.mapPoint.latitude.toFixed(5));
+            lon = parseFloat(evt.mapPoint.longitude.toFixed(5));
+
+            document.getElementById("fill3").onclick = function() {myFunction(lat, lon)};
+
+            function myFunction(lat, lon) {
+                document.getElementById("roomLat+").value = lat;
+                document.getElementById("roomLon+").value = lon;
+            }
+
+            locator.locationToAddress(serviceUrl, params)
+                .then(function(response) { // Show the address found
+                    const address = response.address;
+                    showAddress(address, evt.mapPoint);
+                }, function(err) { // Show no address found
+                    showAddress("No address found.", evt.mapPoint);
+                });
+
+        });
+
+        function showAddress(address, pt) {
+            view.popup.open({
+                title:  + Math.round(pt.longitude * 100000)/100000 + ", " + Math.round(pt.latitude * 100000)/100000,
+                content: address,
+                location: pt
+            });
+        }
+    });
+</script>
 
 <body>
 <header>
@@ -66,11 +282,91 @@
     </div>
 </header>
 
-<div th:replace="fragments/scripts"></div>
+<!--<div th:replace="fragments/scripts"></div>-->
 
 <div class="background">
     <div class="content">
         <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
+            <div th:if="${userForm?.isAdmin}" style="padding-top: 13px; font-weight: bold;">
+<!--                <a th:href="@{/room_view(roomId=${room.id})}" class="btn btn-info">View Details</a>-->
+                <div style="text-align: center;">
+                    <a class="btn btn-primary" data-toggle="modal" data-target="#myModal3">Add Room</a>
+                </div>
+
+                <div class="modal" id="myModal3">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add Room</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form method="post" class="form-signin" th:object="${roomForm}" th:action="@{/rooms}">
+                                    <div class="form-group">
+                                        <label for="roomNum+">Number</label>
+                                        <input type="text" th:field="*{num}" class="form-control" id="roomNum+"
+                                               th:placeholder="*{num}" autofocus="true" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roomFloor+">Floor</label>
+                                        <input type="text" th:field="*{floor}" class="form-control" id="roomFloor+"
+                                               th:placeholder="*{floor}" autofocus="true" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roomSize+">Size</label>
+                                        <input type="text" th:field="*{size}" class="form-control" id="roomSize+"
+                                               th:placeholder="*{size}" autofocus="true" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roomLink+">Link</label>
+                                        <input type="text" th:field="*{link}" class="form-control" id="roomLink+"
+                                               th:placeholder="*{link}" autofocus="true" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roomAddress+">Address</label>
+                                        <input type="text" th:field="*{address}" class="form-control" id="roomAddress+"
+                                               th:placeholder="*{address}" autofocus="true" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roomLat+">Latitude</label>
+                                        <input type="text" th:field="*{lat}" class="form-control" id="roomLat+"
+                                               th:placeholder="*{lat}" autofocus="true" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roomLon+">Longitude</label>
+                                        <input type="text" th:field="*{lon}" class="form-control" id="roomLon+"
+                                               th:placeholder="*{lon}" autofocus="true" required>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" id="headingThree">
+                                            <h5 class="mb-0">
+                                                <button id="fill3" class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                    Select Location
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">Add Room</button>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree">
+                                        <div class="card-body">
+                                            <div id="viewDiv3" style="position: relative; min-width: 675px; max-width: 1065px; height: 675px; border:2px solid #575757"></div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="container-fluid mx-auto" style="font-weight: bold;" th:each="room, iter : ${allRoomsForm}" th:if="${iter.index % 2 == 0}">
                 <div class="row">
                     <div class="col-6 mt-3">
@@ -117,8 +413,7 @@
                                             </div>
                                             <br>
                                             <div th:if="${userForm?.isAdmin}">
-<!--                                                <a th:href="@{/room_view(roomId=${room.id})}" class="btn btn-info">View Details</a>-->
-                                                <a class="btn btn-success" data-toggle="modal" data-target="#myModal1">Edit</a>
+                                                <a class="btn btn-success" data-toggle="modal" data-target="#myModal1">Edit Room</a>
 
                                                 <div class="modal" id="myModal1">
                                                     <div class="modal-dialog modal-xl">
@@ -126,33 +421,66 @@
 
                                                             <!-- Modal Header -->
                                                             <div class="modal-header">
-                                                                <h4 class="modal-title">Modal Heading</h4>
+                                                                <h4 class="modal-title">Edit Room</h4>
                                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                             </div>
 
                                                             <!-- Modal body -->
                                                             <div class="modal-body">
-                                                                <form th:object="${roomForm}" th:action="@{/room_edit}" method="post">
+                                                                <form method="post" class="form-signin" th:object="${roomForm}" th:action="@{/room_edit}">
                                                                     <input type="hidden" th:value="${room.id}" name="id" />
                                                                     <div class="form-group">
                                                                         <label for="roomNum">Number</label>
                                                                         <input type="text" th:field="*{num}" class="form-control" id="roomNum"
-                                                                               th:placeholder="*{room.num}" autofocus="true" required>
+                                                                               th:placeholder="${room.num}" autofocus="true" required>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="roomFloor">Floor</label>
                                                                         <input type="text" th:field="*{floor}" class="form-control" id="roomFloor"
-                                                                               th:placeholder="*{room.floor}" autofocus="true" required>
+                                                                               th:placeholder="${room.floor}" autofocus="true" required>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="roomSize">Size</label>
                                                                         <input type="text" th:field="*{size}" class="form-control" id="roomSize"
-                                                                               th:placeholder="*{room.size}" autofocus="true" required>
+                                                                               th:placeholder="${room.size}" autofocus="true" required>
                                                                     </div>
-                                                                    <button type="submit" class="btn btn-primary">Save Room</button>
+                                                                    <div class="form-group">
+                                                                        <label for="roomLink">Link</label>
+                                                                        <input type="text" th:field="*{link}" class="form-control" id="roomLink"
+                                                                               th:placeholder="${room.link}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomAddress">Address</label>
+                                                                        <input type="text" th:field="*{address}" class="form-control" id="roomAddress"
+                                                                               th:placeholder="${room.address}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomLat">Latitude</label>
+                                                                        <input type="text" th:field="*{lat}" class="form-control" id="roomLat"
+                                                                               th:placeholder="${room.lat}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomLon">Longitude</label>
+                                                                        <input type="text" th:field="*{lon}" class="form-control" id="roomLon"
+                                                                               th:placeholder="${room.lon}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="card">
+                                                                        <div class="card-header" id="headingOne">
+                                                                            <h5 class="mb-0">
+                                                                                <button id="fill1" class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                                                        Select Location
+                                                                                </button>
+                                                                                <button type="submit" class="btn btn-primary">Save Room</button>
+                                                                            </h5>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+                                                                        <div class="card-body">
+                                                                            <div id="viewDiv1" style="position: relative; min-width: 675px; max-width: 1065px; height: 675px; border:2px solid #575757"></div>
+                                                                        </div>
+                                                                    </div>
                                                                 </form>
                                                             </div>
-
                                                             <!-- Modal footer -->
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -212,8 +540,84 @@
                                             <div th:if="${rentalForm == null}">
                                                 <a th:href="@{/room_view(roomId=${room_.id})}" class="btn btn-info">View Details</a>
                                             </div>
-                                            <div th:if="${rentalForm}">
-<!--                                                <a th:href="@{/room_view(roomId=${room_.id})}" class="btn btn-info">View Details</a>-->
+                                            <br>
+                                            <div th:if="${userForm?.isAdmin}">
+                                                <a class="btn btn-success" data-toggle="modal" data-target="#myModal2">Edit Room</a>
+
+                                                <div class="modal" id="myModal2">
+                                                    <div class="modal-dialog modal-xl">
+                                                        <div class="modal-content">
+
+                                                            <!-- Modal Header -->
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Edit Room</h4>
+                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            </div>
+
+                                                            <!-- Modal body -->
+                                                            <div class="modal-body">
+                                                                <form method="post" class="form-signin" th:object="${roomForm}" th:action="@{/room_edit}">
+                                                                    <input type="hidden" th:value="${room_.id}" name="id" />
+                                                                    <div class="form-group">
+                                                                        <label for="roomNum_">Number</label>
+                                                                        <input type="text" th:field="*{num}" class="form-control" id="roomNum_"
+                                                                               th:placeholder="${room_.num}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomFloor_">Floor</label>
+                                                                        <input type="text" th:field="*{floor}" class="form-control" id="roomFloor_"
+                                                                               th:placeholder="${room_.floor}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomSize_">Size</label>
+                                                                        <input type="text" th:field="*{size}" class="form-control" id="roomSize_"
+                                                                               th:placeholder="${room_.size}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomLink_">Link</label>
+                                                                        <input type="text" th:field="*{link}" class="form-control" id="roomLink_"
+                                                                               th:placeholder="${room_.link}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomAddress_">Address</label>
+                                                                        <input type="text" th:field="*{address}" class="form-control" id="roomAddress_"
+                                                                               th:placeholder="${room_.address}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomLat">Latitude</label>
+                                                                        <input type="text" th:field="*{lat}" class="form-control" id="roomLat_"
+                                                                               th:placeholder="${room.lat}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="roomLon">Longitude</label>
+                                                                        <input type="text" th:field="*{lon}" class="form-control" id="roomLon_"
+                                                                               th:placeholder="${room.lon}" autofocus="true" required>
+                                                                    </div>
+                                                                    <div class="card">
+                                                                        <div class="card-header" id="headingTwo">
+                                                                            <h5 class="mb-0">
+                                                                                <button id="fill2" class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                                                    Select Location
+                                                                                </button>
+                                                                                <button type="submit" class="btn btn-primary">Save Room</button>
+                                                                            </h5>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo">
+                                                                        <div class="card-body">
+                                                                            <div id="viewDiv2" style="position: relative; min-width: 675px; max-width: 1065px; height: 675px; border:2px solid #575757"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+
+                                                            <!-- Modal footer -->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </p>
                                     </div>
