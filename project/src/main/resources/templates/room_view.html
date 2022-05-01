@@ -93,7 +93,6 @@
               }
         });
     </script>
-
 </head>
 <style>
     .background {
@@ -124,10 +123,6 @@
     body {
         margin-bottom: 0px;
     }
-    .mx-7 {
-        padding-left: 30rem;
-        padding-right: 20rem;
-    }
     #viewDiv {
         padding: 0;
         margin: auto;
@@ -140,10 +135,6 @@
         margin: 0; /* Remove margins */
         font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
-    }
-    .mx-6 {
-        padding-left: 20rem;
-        padding-right: 20rem;
     }
     .card-horizontal {
         display: flex;
@@ -162,7 +153,6 @@
 <div class="background">
     <div class="content">
         <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
-
         <div class="container-fluid mx-auto mt-3" style="max-width: 1280px;">
 
             <div class="card">
@@ -220,6 +210,9 @@
                     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
                         <div class="card-body">
                             <div class="mx-4 pb-3" style="font-weight: bold;">
+                                <div th:if="${wrongDate}" class="alert alert-danger" role="alert">
+                                    Wrong Date Format, please try again!
+                                </div>
                                 <form id="rental-form" method="POST" class="form-signin mt-3 pb-2" th:object="${rentalForm}" th:action="@{/my_room(roomId=${roomForm.id})}">
                                     <div class="form-group row">
                                         <div class="col ">

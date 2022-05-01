@@ -71,6 +71,7 @@ public class HomeController {
             Room room = roomService.getRoom(roomId);
 
             model.addAttribute("roomForm", room);
+            model.addAttribute("rentalForm", rental);
         }
 
         model.addAttribute("userForm", user);

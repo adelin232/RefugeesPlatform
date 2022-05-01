@@ -74,7 +74,7 @@
 <!--                            <a href="/rooms" class="dropdown-item dropdown-profile">-->
 <!--                                <i class="fas fa-hotel mr-3"></i> Rooms-->
 <!--                            </a>-->
-                            <a th:if="${roomForm}" th:href="@{/my_room(roomId=${roomForm?.id})}" class="dropdown-item">
+                            <a th:if="${rentalForm?.id}" th:href="@{/my_room(roomId=${roomForm?.id})}" class="dropdown-item">
                                 <i class="fas fa-hotel mr-3"></i> My Room
                             </a>
                             <a id="qsLogoutBtn" th:href="@{/logout}" class="dropdown-item">
@@ -115,7 +115,7 @@
 <!--                        <i class="fas fa-hotel mr-3"></i>-->
 <!--                        <a th:href="@{/rooms}"> Rooms</a>-->
 <!--                    </li>-->
-                    <li th:if="${roomForm}">
+                    <li th:if="${rentalForm?.id}">
                         <i class="fas fa-hotel mr-3"></i>
                         <a th:href="@{/my_room(roomId=${roomForm?.id})}"> My Room</a>
                     </li>

@@ -31,6 +31,10 @@ public class RoomService {
         roomRepository.save(room);
     }
 
+    public void deleteRoom(Long id) {
+        roomRepository.deleteById(id);
+    }
+
     public Room getRoom(Long id) {
         List<Room> rooms = getRooms();
 
