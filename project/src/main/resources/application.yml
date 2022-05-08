@@ -1,7 +1,9 @@
 logging:
   level:
     root: ERROR
-    org.springframework.web: ERROR
+    org.springframework:
+      web: ERROR
+      mail: DEBUG
     com.auth0.example: TRACE
 
 spring:
@@ -20,7 +22,21 @@ spring:
           auth0:
             # trailing slash is important!
             issuer-uri: https://adelin.eu.auth0.com/
-            
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ukrainianrefugees123@gmail.com
+    password: fvpvdrfkicykdcdc
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
+
 server:
   ssl:
     key-store: classpath:springboot.p12
