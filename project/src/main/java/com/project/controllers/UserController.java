@@ -2,6 +2,7 @@ package com.project.controllers;
 
 import com.project.models.User;
 import com.project.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -30,24 +32,11 @@ public class UserController {
         userService.createUser(user);
     }
 
-    /*@PutMapping("/users")
-    public User updateUser(@Valid @RequestBody User user) {
-        return userService.updateUser(user);
-    }*/
-
-    /*@DeleteMapping("/users/{user_id}")
-    public List<User> deleteUser(@PathVariable Long user_id) throws ResourceNotFoundException {
-        return userService.deleteUser(user_id);
-    }*/
-
-    /*@GetMapping("/users/{user_email}")
-    public User getUser(@PathVariable String user_email) {
-        return userService.getUser(user_email);
-    }*/
-
     @GetMapping("/users")
     @Transactional
     public String users(Model model, @AuthenticationPrincipal OidcUser principal) {
+        log.info("Received GET all users.");
+
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();

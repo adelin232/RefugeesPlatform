@@ -8,6 +8,7 @@ import com.project.models.User;
 import com.project.services.RentalService;
 import com.project.services.RoomService;
 import com.project.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -27,6 +28,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
+@Slf4j
 public class RoomController {
 
     @Autowired
@@ -46,6 +48,8 @@ public class RoomController {
     @GetMapping("/rooms")
     @Transactional
     public String rooms(Model model, @AuthenticationPrincipal OidcUser principal) {
+        log.info("Received GET all rooms.");
+
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
@@ -76,6 +80,8 @@ public class RoomController {
     @PostMapping("/rooms")
     @Transactional
     public String rooms(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm) {
+        log.info("Received POST room.");
+
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -122,6 +128,8 @@ public class RoomController {
     @GetMapping("/room_view")
     @Transactional
     public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId) {
+        log.info("Received GET room_view.");
+
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
@@ -168,6 +176,8 @@ public class RoomController {
     @GetMapping("/my_room")
     @Transactional
     public String handleMyRoomView(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId) {
+        log.info("Received GET my_room.");
+
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
@@ -209,6 +219,8 @@ public class RoomController {
     @Transactional
     public String handleMyRoomView(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId,
                                    @ModelAttribute("rentalForm") Rental rentalForm) throws InterruptedException {
+        log.info("Received POST my_room.");
+
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -250,6 +262,8 @@ public class RoomController {
     @PostMapping("/room_edit")
     @Transactional
     public String editRoom(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm) {
+        log.info("Received POST room_edit.");
+
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -275,6 +289,8 @@ public class RoomController {
     @GetMapping("/room_remove")
     @Transactional
     public String removeRoom(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId) {
+        log.info("Received GET room_remove.");
+
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 

@@ -8,8 +8,7 @@ import com.project.models.User;
 import com.project.services.RentalService;
 import com.project.services.RoomService;
 import com.project.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -23,10 +22,9 @@ import java.util.Map;
 /**
  * Controller for the home page.
  */
+@Slf4j
 @Controller
 public class HomeController {
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UserService userService;

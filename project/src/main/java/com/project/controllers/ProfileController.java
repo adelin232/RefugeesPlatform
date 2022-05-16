@@ -2,8 +2,7 @@ package com.project.controllers;
 
 import com.project.models.User;
 import com.project.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -16,10 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.transaction.Transactional;
 import java.util.Map;
 
+@Slf4j
 @Controller
 public class ProfileController {
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UserService userService;
@@ -30,6 +28,8 @@ public class ProfileController {
     @GetMapping("/profile")
     @Transactional
     public String profile(Model model, @AuthenticationPrincipal OidcUser principal) {
+        log.info("Received GET profile.");
+
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -53,6 +53,8 @@ public class ProfileController {
     @PostMapping("/profile")
     @Transactional
     public String profile(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("userForm") User userForm) {
+        log.info("Received POST profile.");
+
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
