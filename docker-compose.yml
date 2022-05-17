@@ -79,11 +79,20 @@ services:
       driver: json-file
       options:
         tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
-  
+
+  rabbitmq:
+      image: rabbitmq:3-management
+      container_name: rabbitmq  
+      restart: always
+      ports:
+        - "15672:15672"
+        - "5672:5672"
+
   app:
     container_name: spring-app
     depends_on:
       - mysqldb
+      - rabbitmq
     build: ./project
     restart: on-failure
     env_file: ./.env
@@ -103,6 +112,8 @@ services:
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
         "spring.jpa.hibernate.ddl-auto" : "update"
       }'
+      # rabbitmq
+      SPRING_RABBITMQ_HOST: rabbitmq
     volumes:
       - /project/.m2:/root/.m2
       - /project/logs:/workspace/logs

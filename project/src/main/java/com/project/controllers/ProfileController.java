@@ -1,8 +1,11 @@
 package com.project.controllers;
 
+import com.project.Constants;
 import com.project.models.User;
 import com.project.services.UserService;
+import com.project.statuses.UserStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -24,6 +27,9 @@ public class ProfileController {
 
     @Autowired
     private HomeController homeController;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @GetMapping("/profile")
     @Transactional
@@ -67,6 +73,9 @@ public class ProfileController {
                 if (user == null) {
                     log.info("POST request for /profile");
                     userService.createUser(userForm);
+                    UserStatus userStatus = new UserStatus(userForm, "PROCESS", "User Successfully Created" +
+                                    userForm.getFirstName() + " " + userForm.getLastName());
+                    rabbitTemplate.convertAndSend(Constants.EXCHANGE, Constants.ROUTING_KEY, userStatus);
                 } else {
                     log.info("POST request for /profile from " + user.getId());
                     userService.updateUser(userForm);
