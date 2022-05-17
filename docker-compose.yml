@@ -3,7 +3,7 @@ version: "3.7"
 services:
   loki:
     container_name: loki
-    image: grafana/loki
+    image: grafana/loki:2.5.0
     container_name: loki
     volumes:
       - ./loki:/etc/loki
@@ -15,7 +15,7 @@ services:
 
   promtail:
     container_name: promtail
-    image: grafana/promtail
+    image: grafana/promtail:2.5.0
     container_name: promtail
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers
@@ -26,7 +26,8 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana:master
+    # image: grafana/grafana:8.5.2
+    build: ./grafana
     container_name: grafana
     ports:
       - "3000:3000"
@@ -34,6 +35,10 @@ services:
       - loki
     volumes:
       - ./grafana/grafana-storage:/var/lib/grafana
+      # - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
 
   mysqldb:
     container_name: mysqldb
