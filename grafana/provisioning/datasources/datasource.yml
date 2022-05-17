@@ -4,6 +4,7 @@ datasources:
   - name: Loki
     type: loki
     access: proxy
+    uid: 666013XXX
     url: http://loki:3100
     jsonData:
       maxLines: 1000
