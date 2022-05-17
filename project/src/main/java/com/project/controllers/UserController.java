@@ -63,6 +63,8 @@ public class UserController {
             model.addAttribute("allUsersForm", userList);
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /users");
         }
 
         return "users";

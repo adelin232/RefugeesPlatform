@@ -45,6 +45,8 @@ public class NewsController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("GET request for /news");
         }
 
         return "news";

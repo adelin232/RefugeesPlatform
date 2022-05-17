@@ -45,6 +45,8 @@ public class ProfileController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("GET request for /profile");
         }
 
         return "profile";
@@ -74,6 +76,8 @@ public class ProfileController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /profile");
         }
 
         return "profile";

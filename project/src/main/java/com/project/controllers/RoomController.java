@@ -75,6 +75,8 @@ public class RoomController {
 
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /rooms");
         }
 
         return "rooms";
@@ -106,6 +108,8 @@ public class RoomController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /rooms");
         }
 
         return "rooms";
@@ -171,6 +175,8 @@ public class RoomController {
 
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /room_view");
         }
 
         return "room_view";
@@ -213,6 +219,8 @@ public class RoomController {
 
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /my_room");
         }
 
         return "my_room";
@@ -257,6 +265,8 @@ public class RoomController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /my_room");
         }
 
         return "my_room";
@@ -284,6 +294,8 @@ public class RoomController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /room_edit");
         }
 
         return "redirect:rooms";
@@ -311,6 +323,8 @@ public class RoomController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("GET request for /room_remove");
         }
 
         return "redirect:rooms";

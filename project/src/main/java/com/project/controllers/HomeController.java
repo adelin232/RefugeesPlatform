@@ -52,6 +52,8 @@ public class HomeController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("GET request for / or /index");
         }
 
         return "index";
