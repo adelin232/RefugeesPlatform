@@ -12,6 +12,10 @@ services:
     command: -config.file=/etc/loki/loki-config.yaml
     networks:
       - loki
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   promtail:
     container_name: promtail
@@ -23,6 +27,10 @@ services:
     command: -config.file=/etc/promtail/config.yml
     networks:
       - loki
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   grafana:
     container_name: grafana
@@ -39,6 +47,10 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=grafana
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   mysqldb:
     container_name: mysqldb
@@ -56,6 +68,10 @@ services:
     #   network-db:
     #     aliases:
     #       - mysqldb
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
   
   app:
     container_name: spring-app
@@ -87,6 +103,10 @@ services:
     tty: true
     extra_hosts:
       - "$SPRING_PROXY_ADDRESS:127.0.0.1"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     # networks:
     #   network-db:
     #     aliases:
@@ -120,6 +140,10 @@ services:
       - 6969:8080
     extra_hosts:
       - "$ADMINER_PROXY_ADDRESS:127.0.0.1"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     # networks:
     #   network-proxy:
     #     aliases:
@@ -152,6 +176,10 @@ services:
       CERT_NAME: portainer
     extra_hosts:
       - "$PORTAINER_PROXY_ADDRESS:127.0.0.1"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     # networks:
     #   network-proxy:
     #     aliases:
@@ -168,6 +196,10 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx/certs:/etc/nginx/certs
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     # networks:
     #   network-proxy:
     #     aliases:
