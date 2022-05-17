@@ -45,8 +45,8 @@ services:
       - ./grafana/grafana-storage:/var/lib/grafana
     environment:
       # grafana
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: grafana
+      GF_SECURITY_ADMIN_USER: $GRAFANA_USER
+      GF_SECURITY_ADMIN_PASSWORD: $GRAFANA_PASSWORD
       GF_INSTALL_PLUGINS: grafana-piechart-panel
       GF_SERVER_PROTOCOL: https
       GF_SERVER_CERT_KEY: /etc/grafana/grafana.key
@@ -75,10 +75,6 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - ./mysql/mysql-data:/var/lib/mysql
-    # networks:
-    #   network-db:
-    #     aliases:
-    #       - mysqldb
     logging:
       driver: json-file
       options:
@@ -92,7 +88,6 @@ services:
     restart: on-failure
     env_file: ./.env
     ports:
-      # - 6868:$SPRING_DOCKER_PORT
       - 8443:8443
     environment:
       # proxy
@@ -118,35 +113,20 @@ services:
       driver: json-file
       options:
         tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
-    # networks:
-    #   network-db:
-    #     aliases:
-    #       - app
-    #       - spring-app
-    #   network-proxy:
-    #     aliases:
-    #       - app
-    #       - spring-app
 
   adminer:
     container_name: adminer
     depends_on: 
       - mysqldb
-    # image: mcaubrey/adminer
     build: ./adminer
     environment:
       # proxy
       VIRTUAL_HOST: $ADMINER_PROXY_ADDRESS
-      # VIRTUAL_PROTO: https
-      # VIRTUAL_PORT: 6969
       CERT_NAME: adminer
       # adminer
       ADMINER_DEFAULT_SERVER: mysqldb
       ADMINER_DESIGN: 'pepa-linha'
       ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter'
-      # ADMINER_DEFAULT_USERNAME: $MYSQLDB_USER
-      # ADMINER_DEFAULT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
-      # ADMINER_DEFAULT_DATABASE: $MYSQLDB_DATABASE
     ports:
       - 6969:8080
     extra_hosts:
@@ -155,10 +135,6 @@ services:
       driver: json-file
       options:
         tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
-    # networks:
-    #   network-proxy:
-    #     aliases:
-    #       - adminer
 
   portainer:
     container_name: portainer
@@ -166,7 +142,6 @@ services:
       - mysqldb
       - adminer
       - app
-    # image: portainer/portainer-ce:2.9.3
     build: ./portainer
     container_name: portainer
     restart: unless-stopped
@@ -191,10 +166,6 @@ services:
       driver: json-file
       options:
         tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
-    # networks:
-    #   network-proxy:
-    #     aliases:
-    #       - portainer
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -211,20 +182,6 @@ services:
       driver: json-file
       options:
         tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
-    # networks:
-    #   network-proxy:
-    #     aliases:
-    #       - nginx-proxy
     
 networks:
     loki:
-#   network-db:
-#     name: spring-mysql
-#   network-proxy:
-#     name: reverse-proxy
-  
-    
-
-# volumes:
-  # portainer_data:
-
