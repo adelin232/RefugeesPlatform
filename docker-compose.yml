@@ -40,17 +40,24 @@ services:
       - "3000:3000"
     networks:
       - loki
+      - default
     volumes:
       - ./grafana/grafana-storage:/var/lib/grafana
     environment:
       # grafana
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=grafana
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel
-      - GF_SERVER_PROTOCOL=https
-      - GF_SERVER_CERT_KEY=/etc/grafana/grafana.key
-      - GF_SERVER_CERT_FILE=/etc/grafana/grafana.crt
-      
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: grafana
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+      GF_SERVER_PROTOCOL: https
+      GF_SERVER_CERT_KEY: /etc/grafana/grafana.key
+      GF_SERVER_CERT_FILE: /etc/grafana/grafana.crt
+      # proxy
+      VIRTUAL_HOST: $GRAFANA_PROXY_ADDRESS
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 3000
+      CERT_NAME: grafana
+    extra_hosts:
+      - "$GRAFANA_PROXY_ADDRESS:127.0.0.1"
     logging:
       driver: json-file
       options:
@@ -208,7 +215,6 @@ services:
     #   network-proxy:
     #     aliases:
     #       - nginx-proxy
-
     
 networks:
     loki:
@@ -221,3 +227,4 @@ networks:
 
 # volumes:
   # portainer_data:
+
