@@ -1,5 +1,15 @@
 version: "3.7"
+
 services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:master
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - loki
+
   mysqldb:
     container_name: mysqldb
     build: ./mysql
@@ -134,7 +144,8 @@ services:
     #       - nginx-proxy
 
     
-# networks:
+networks:
+    loki:
 #   network-db:
 #     name: spring-mysql
 #   network-proxy:
