@@ -28,7 +28,7 @@ public class ProfileController {
     @GetMapping("/profile")
     @Transactional
     public String profile(Model model, @AuthenticationPrincipal OidcUser principal) {
-        log.info("Received GET profile.");
+        log.debug("Received GET profile.");
 
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
@@ -53,7 +53,7 @@ public class ProfileController {
     @PostMapping("/profile")
     @Transactional
     public String profile(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("userForm") User userForm) {
-        log.info("Received POST profile.");
+        log.debug("Received POST profile.");
 
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();

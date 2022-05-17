@@ -38,6 +38,8 @@ public class HomeController {
     @GetMapping({"/", "/index"})
     @Transactional
     public String home(Model model, @AuthenticationPrincipal OidcUser principal) {
+        log.debug("Received GET home.");
+
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();

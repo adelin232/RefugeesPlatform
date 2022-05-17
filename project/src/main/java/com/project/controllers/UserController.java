@@ -35,7 +35,7 @@ public class UserController {
     @GetMapping("/users")
     @Transactional
     public String users(Model model, @AuthenticationPrincipal OidcUser principal) {
-        log.info("Received GET all users.");
+        log.debug("Received GET all users.");
 
         if (principal != null) {
             int is_new_user = 0;

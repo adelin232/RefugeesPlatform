@@ -2,8 +2,7 @@ package com.project.controllers;
 
 import com.project.models.User;
 import com.project.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -17,9 +16,9 @@ import java.util.Map;
 /**
  * Controller for the news page.
  */
+@Slf4j
 @Controller
 public class NewsController {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 //    @Autowired
 //    private NewsService newsService;
@@ -33,6 +32,8 @@ public class NewsController {
     @GetMapping("/news")
     @Transactional
     public String news(Model model, @AuthenticationPrincipal OidcUser principal) {
+        log.debug("Received GET news.");
+
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
