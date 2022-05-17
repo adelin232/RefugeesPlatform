@@ -32,6 +32,8 @@ services:
       - "3000:3000"
     networks:
       - loki
+    volumes:
+      - ./grafana/grafana-storage:/var/lib/grafana
 
   mysqldb:
     container_name: mysqldb

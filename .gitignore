@@ -2,3 +2,5 @@
 ./mysql/mysqldata/.*
 ./portainer/portainer-data/*
 ./portainer/portainer-data/.*
+./grafana/grafana-storage/*
+./grafana/grafana-storage/.*
