@@ -2,8 +2,7 @@ package com.project.controllers;
 
 import com.project.models.User;
 import com.project.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -17,12 +16,9 @@ import java.util.Map;
 /**
  * Controller for the news page.
  */
+@Slf4j
 @Controller
 public class NewsController {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-//    @Autowired
-//    private NewsService newsService;
 
     @Autowired
     private UserService userService;
@@ -34,7 +30,6 @@ public class NewsController {
     @Transactional
     public String news(Model model, @AuthenticationPrincipal OidcUser principal) {
         if (principal != null) {
-            int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
 
             if (claims.containsKey("email")) {
@@ -42,15 +37,16 @@ public class NewsController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
-                    is_new_user = 1;
+                    log.info("GET request for /news");
                 } else {
+                    log.info("GET request for /news from " + user.getId());
                     homeController.addForms(model, user);
                 }
             }
 
             model.addAttribute("profile", principal.getClaims());
-            // model.addAttribute("profileJson", claimsToJsonString);
-            model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /news");
         }
 
         return "news";

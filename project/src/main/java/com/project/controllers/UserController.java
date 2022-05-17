@@ -29,6 +29,7 @@ public class UserController {
 
     @PostMapping("/users")
     public void createUser(@Valid @RequestBody User user) {
+        log.info("POST request for /users from " + user.getId());
         userService.createUser(user);
     }
 
@@ -46,6 +47,7 @@ public class UserController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /users");
                     is_new_user = 1;
                 } else {
                     if (!user.getIsAdmin()) {
@@ -61,6 +63,8 @@ public class UserController {
             model.addAttribute("allUsersForm", userList);
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /users");
         }
 
         return "users";

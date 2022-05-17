@@ -1,11 +1,3 @@
-logging:
-  level:
-    root: ERROR
-    org.springframework:
-      web: ERROR
-      mail: DEBUG
-    com.auth0.example: TRACE
-
 spring:
   security:
     oauth2:

@@ -28,8 +28,6 @@ public class ProfileController {
     @GetMapping("/profile")
     @Transactional
     public String profile(Model model, @AuthenticationPrincipal OidcUser principal) {
-        log.info("Received GET profile.");
-
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -38,13 +36,17 @@ public class ProfileController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /profile");
                     model.addAttribute("userForm", new User());
                 } else {
+                    log.info("GET request for /profile from " + user.getId());
                     homeController.addForms(model, user);
                 }
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("GET request for /profile");
         }
 
         return "profile";
@@ -53,8 +55,6 @@ public class ProfileController {
     @PostMapping("/profile")
     @Transactional
     public String profile(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("userForm") User userForm) {
-        log.info("Received POST profile.");
-
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -65,8 +65,10 @@ public class ProfileController {
                 userForm.setIsAdmin(false);
 
                 if (user == null) {
+                    log.info("POST request for /profile");
                     userService.createUser(userForm);
                 } else {
+                    log.info("POST request for /profile from " + user.getId());
                     userService.updateUser(userForm);
                 }
 
@@ -74,6 +76,8 @@ public class ProfileController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /profile");
         }
 
         return "profile";

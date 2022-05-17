@@ -5,8 +5,14 @@ docker-compose down --remove-orphans
 echo ""
 sleep 1
 
+# install plugins
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+
 # remove database files
 sudo rm -rf ./mysql/mysql-data/*
+
+# remove grafana logs
+sudo rm -rf ./grafana/grafana-storage/*
 
 # start new containers
 docker-compose up --force-recreate --detach --build

@@ -1,5 +1,58 @@
 version: "3.7"
+
 services:
+  loki:
+    container_name: loki
+    image: grafana/loki:2.5.0
+    container_name: loki
+    volumes:
+      - ./loki:/etc/loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yaml
+    networks:
+      - loki
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:2.5.0
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - loki
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
+  grafana:
+    container_name: grafana
+    # image: grafana/grafana:8.5.2
+    build: ./grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - loki
+    volumes:
+      - ./grafana/grafana-storage:/var/lib/grafana
+      # - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
   mysqldb:
     container_name: mysqldb
     build: ./mysql
@@ -16,6 +69,10 @@ services:
     #   network-db:
     #     aliases:
     #       - mysqldb
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
   
   app:
     container_name: spring-app
@@ -43,10 +100,15 @@ services:
       }'
     volumes:
       - /project/.m2:/root/.m2
+      - /project/logs:/workspace/logs
     stdin_open: true
     tty: true
     extra_hosts:
       - "$SPRING_PROXY_ADDRESS:127.0.0.1"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     # networks:
     #   network-db:
     #     aliases:
@@ -80,6 +142,10 @@ services:
       - 6969:8080
     extra_hosts:
       - "$ADMINER_PROXY_ADDRESS:127.0.0.1"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     # networks:
     #   network-proxy:
     #     aliases:
@@ -112,6 +178,10 @@ services:
       CERT_NAME: portainer
     extra_hosts:
       - "$PORTAINER_PROXY_ADDRESS:127.0.0.1"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     # networks:
     #   network-proxy:
     #     aliases:
@@ -128,13 +198,18 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx/certs:/etc/nginx/certs
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     # networks:
     #   network-proxy:
     #     aliases:
     #       - nginx-proxy
 
     
-# networks:
+networks:
+    loki:
 #   network-db:
 #     name: spring-mysql
 #   network-proxy:

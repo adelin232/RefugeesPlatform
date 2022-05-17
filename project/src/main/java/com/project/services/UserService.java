@@ -1,13 +1,10 @@
 package com.project.services;
 
-import com.project.EmailSender;
 import com.project.models.User;
 import com.project.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -16,19 +13,16 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private EmailSender emailSender;
-
     public void createUser(User user) {
-        System.out.println("Sending Email...");
+//        System.out.println("Sending Email...");
 
-        try {
-            emailSender.sendEmail(user.getEmail());
-        } catch (MessagingException | IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            // TODO NOTIFY RABBITMQ
+//        } catch (MessagingException | IOException e) {
+//            e.printStackTrace();
+//        }
 
-        System.out.println("Done");
+//        System.out.println("Done");
 
         userRepository.save(user);
     }
