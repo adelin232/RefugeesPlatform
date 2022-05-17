@@ -100,6 +100,7 @@ services:
       }'
     volumes:
       - /project/.m2:/root/.m2
+      - /project/logs:/workspace/logs
     stdin_open: true
     tty: true
     extra_hosts:
