@@ -27,6 +27,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for the rooms page.
+ */
 @Slf4j
 @Controller
 public class RoomController {
@@ -48,8 +51,6 @@ public class RoomController {
     @GetMapping("/rooms")
     @Transactional
     public String rooms(Model model, @AuthenticationPrincipal OidcUser principal) {
-        log.debug("Received GET all rooms.");
-
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
@@ -60,8 +61,10 @@ public class RoomController {
                 user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /rooms");
                     is_new_user = 1;
                 } else {
+                    log.info("GET request for /rooms from " + user.getId());
                     model.addAttribute("roomForm", new Room());
                     homeController.addForms(model, user);
                     addRentalAndRoomsForm(model, user);
@@ -80,8 +83,6 @@ public class RoomController {
     @PostMapping("/rooms")
     @Transactional
     public String rooms(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm) {
-        log.debug("Received POST room.");
-
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -90,8 +91,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("POST request for /rooms");
                     return "redirect:index";
                 } else {
+                    log.info("POST request for /rooms from " + user.getId());
                     roomForm.setIsAvail(true);
                     roomService.createRoom(roomForm);
                     model.addAttribute("roomForm", roomForm);
@@ -128,8 +131,6 @@ public class RoomController {
     @GetMapping("/room_view")
     @Transactional
     public String handleViewRoom(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId) {
-        log.debug("Received GET room_view.");
-
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
@@ -139,8 +140,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /room_view");
                     is_new_user = 1;
                 } else {
+                    log.info("POST request for /room_view from " + user.getId());
                     Room room = roomService.getRoom(roomId);
                     Rental rental = rentalService.findRentalByUserId(user.getId());
 
@@ -176,8 +179,6 @@ public class RoomController {
     @GetMapping("/my_room")
     @Transactional
     public String handleMyRoomView(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId) {
-        log.debug("Received GET my_room.");
-
         if (principal != null) {
             int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
@@ -187,8 +188,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /my_room");
                     is_new_user = 1;
                 } else {
+                    log.info("GET request for /my_room from " + user.getId());
                     Rental rental = rentalService.findRentalByUserId(user.getId());
 
                     if (rental == null) {
@@ -218,9 +221,7 @@ public class RoomController {
     @PostMapping("/my_room")
     @Transactional
     public String handleMyRoomView(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId,
-                                   @ModelAttribute("rentalForm") Rental rentalForm) throws InterruptedException {
-        log.debug("Received POST my_room.");
-
+                                   @ModelAttribute("rentalForm") Rental rentalForm) {
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -229,8 +230,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("POST request for /my_room");
                     return "redirect:index";
                 } else {
+                    log.info("POST request for /my_room from " + user.getId());
                     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                             .withResolverStyle(ResolverStyle.STRICT);
                     DateValidator validator = new DateValidatorUsingDateTimeFormatter(dateFormatter);
@@ -262,8 +265,6 @@ public class RoomController {
     @PostMapping("/room_edit")
     @Transactional
     public String editRoom(Model model, @AuthenticationPrincipal OidcUser principal, @ModelAttribute("roomForm") Room roomForm) {
-        log.debug("Received POST room_edit.");
-
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -272,8 +273,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("POST request for /room_edit");
                     return "redirect:index";
                 } else {
+                    log.info("POST request for /room_edit from " + user.getId());
                     roomService.updateRoom(roomForm);
                 }
 
@@ -289,8 +292,6 @@ public class RoomController {
     @GetMapping("/room_remove")
     @Transactional
     public String removeRoom(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId) {
-        log.debug("Received GET room_remove.");
-
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -299,8 +300,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /room_remove");
                     return "redirect:index";
                 } else {
+                    log.info("GET request for /room_remove from " + user.getId());
                     roomService.deleteRoom(roomId);
                 }
 

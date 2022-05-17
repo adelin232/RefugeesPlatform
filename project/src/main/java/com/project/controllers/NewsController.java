@@ -20,9 +20,6 @@ import java.util.Map;
 @Controller
 public class NewsController {
 
-//    @Autowired
-//    private NewsService newsService;
-
     @Autowired
     private UserService userService;
 
@@ -32,10 +29,7 @@ public class NewsController {
     @GetMapping("/news")
     @Transactional
     public String news(Model model, @AuthenticationPrincipal OidcUser principal) {
-        log.debug("Received GET news.");
-
         if (principal != null) {
-            int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
 
             if (claims.containsKey("email")) {
@@ -43,15 +37,14 @@ public class NewsController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
-                    is_new_user = 1;
+                    log.info("GET request for /news");
                 } else {
+                    log.info("GET request for /news from " + user.getId());
                     homeController.addForms(model, user);
                 }
             }
 
             model.addAttribute("profile", principal.getClaims());
-            // model.addAttribute("profileJson", claimsToJsonString);
-            model.addAttribute("is_new_user", is_new_user);
         }
 
         return "news";

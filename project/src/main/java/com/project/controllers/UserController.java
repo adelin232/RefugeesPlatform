@@ -29,13 +29,14 @@ public class UserController {
 
     @PostMapping("/users")
     public void createUser(@Valid @RequestBody User user) {
+        log.info("POST request for /users from " + user.getId());
         userService.createUser(user);
     }
 
     @GetMapping("/users")
     @Transactional
     public String users(Model model, @AuthenticationPrincipal OidcUser principal) {
-        log.debug("Received GET all users.");
+        log.info("Received GET all users.");
 
         if (principal != null) {
             int is_new_user = 0;
@@ -46,6 +47,7 @@ public class UserController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /users");
                     is_new_user = 1;
                 } else {
                     if (!user.getIsAdmin()) {

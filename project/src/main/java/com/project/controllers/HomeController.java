@@ -1,7 +1,5 @@
 package com.project.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.models.Rental;
 import com.project.models.Room;
 import com.project.models.User;
@@ -38,10 +36,7 @@ public class HomeController {
     @GetMapping({"/", "/index"})
     @Transactional
     public String home(Model model, @AuthenticationPrincipal OidcUser principal) {
-        log.debug("Received GET home.");
-
         if (principal != null) {
-            int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
 
             if (claims.containsKey("email")) {
@@ -49,15 +44,14 @@ public class HomeController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
-                    is_new_user = 1;
+                    log.info("GET request for / or /index");
                 } else {
+                    log.info("GET request for / or /index from " + user.getId());
                     addForms(model, user);
                 }
             }
 
             model.addAttribute("profile", principal.getClaims());
-//            model.addAttribute("profileJson", claimsToJsonString);
-            model.addAttribute("is_new_user", is_new_user);
         }
 
         return "index";
@@ -75,18 +69,5 @@ public class HomeController {
         }
 
         model.addAttribute("userForm", user);
-    }
-
-
-    private String claimsToJson(Map<String, Object> claims) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.findAndRegisterModules();
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(claims);
-        } catch (JsonProcessingException jpe) {
-            log.error("Error parsing claims to JSON", jpe);
-        }
-
-        return "Error parsing claims to JSON.";
     }
 }

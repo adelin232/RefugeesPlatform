@@ -14,7 +14,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public void createUser(User user) {
-        System.out.println("Sending Email...");
+//        System.out.println("Sending Email...");
 
 //        try {
 //            // TODO NOTIFY RABBITMQ
@@ -22,7 +22,7 @@ public class UserService {
 //            e.printStackTrace();
 //        }
 
-        System.out.println("Done");
+//        System.out.println("Done");
 
         userRepository.save(user);
     }
