@@ -81,18 +81,25 @@ services:
         tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   rabbitmq:
-      image: rabbitmq:3-management
-      container_name: rabbitmq  
-      restart: always
-      ports:
-        - "15672:15672"
-        - "5672:5672"
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  rabbitmq-listener:
+    container_name: rabbitmq-listener
+    build: ./rabbitmq-listener
+    restart: always
+    ports:
+      - "15673:15673"
+      - "5673:5673"
 
   app:
     container_name: spring-app
     depends_on:
       - mysqldb
-      - rabbitmq
     build: ./project
     restart: on-failure
     env_file: ./.env
