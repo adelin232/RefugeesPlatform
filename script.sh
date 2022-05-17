@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# !.!.!.!.!.!.!.!.!.!
+
+# ALWAYS RUN AS SUDO
+
+# ^.^.^.^.^.^.^.^.^.^
+
 # stop running containers
 docker-compose down --remove-orphans
 echo ""
@@ -30,6 +36,9 @@ for _file in /etc/hosts; do
     fi
     if ! grep -qF '127.0.0.1        local.proxy.portainer' $_file; then
         sudo echo "127.0.0.1        local.proxy.portainer" >> $_file
+    fi
+    if ! grep -qF '127.0.0.1        local.proxy.grafana' $_file; then
+        sudo echo "127.0.0.1        local.proxy.grafana" >> $_file
     fi
 done
 
