@@ -1,7 +1,6 @@
 package com.project;
 
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -14,16 +13,16 @@ import java.io.IOException;
 @Configuration
 public class MessagingConfig {
 
-    @Bean
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setUsername("admin");
-        connectionFactory.setPassword("rabbitmq");
-        connectionFactory.setVirtualHost("/");
-        connectionFactory.setHost("rabbitmq-broker");
-        connectionFactory.setPort(5672);
-        return connectionFactory;
-    }
+//    @Bean
+//    public ConnectionFactory connectionFactory() {
+//        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+//        connectionFactory.setUsername("admin");
+//        connectionFactory.setPassword("rabbitmq");
+//        connectionFactory.setVirtualHost("/");
+//        connectionFactory.setHost("rabbitmq-broker");
+//        connectionFactory.setPort(5672);
+//        return connectionFactory;
+//    }
 
     @Bean
     public Queue queue() {

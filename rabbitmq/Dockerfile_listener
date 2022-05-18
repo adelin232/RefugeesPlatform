@@ -1,4 +1,4 @@
 FROM python:3.11.0b1-alpine
 COPY ./receive.py ./receive.py
 RUN python3 -m pip install pika --quiet
-CMD ["python", "receive.py"]
+CMD ["python", "-u", "receive.py"]
