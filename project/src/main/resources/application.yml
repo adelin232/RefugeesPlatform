@@ -1,4 +1,10 @@
 spring:
+  rabbitmq:
+    host: rabbitmq_broker
+    stream:
+      username: admin
+      password: rabbitmq
+    port: 5672
   security:
     oauth2:
       client:

@@ -8,11 +8,20 @@
       }
     ],
     "queues": [
-    {
+      {
         "name": "rabbit_queue",
         "vhost": "/",
-        "durable": false,
+        "durable": true,
         "auto_delete": false
-    }
-]
+      }
+    ],
+    "permissions": [
+      {
+        "user": "admin",
+        "vhost": "/",
+        "configure": ".*",
+        "write": ".*",
+        "read": ".*"
+      }
+   ]
 }

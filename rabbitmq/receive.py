@@ -8,7 +8,8 @@ def on_message(ch, method, properties, body):
     print(" [x] Received %r" % message)
 
 def main():
-    connection_params = pika.ConnectionParameters(host="rabbitmq-broker")
+    credentials = pika.PlainCredentials('admin', 'rabbitmq')
+    connection_params = pika.ConnectionParameters(host="rabbitmq-broker", credentials=credentials)
 
     connected = 0
     while not connected:
@@ -24,7 +25,7 @@ def main():
 
     channel = connection.channel()
 
-    channel.queue_declare(queue=queue)
+    channel.queue_declare(queue=queue, durable=True)
     channel.basic_consume(queue=queue, on_message_callback=on_message, auto_ack=True)
 
     print('Subscribed to ' + queue + ', waiting for messages...')
