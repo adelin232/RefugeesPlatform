@@ -18,6 +18,7 @@ def send_mail(email):
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, message)
+        print(" [x] Email successfully sent to " + email)
 
 def on_message(ch, method, properties, body):
     message = body.decode('UTF-8')
