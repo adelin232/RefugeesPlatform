@@ -13,17 +13,6 @@ import java.io.IOException;
 @Configuration
 public class MessagingConfig {
 
-//    @Bean
-//    public ConnectionFactory connectionFactory() {
-//        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-//        connectionFactory.setUsername("admin");
-//        connectionFactory.setPassword("rabbitmq");
-//        connectionFactory.setVirtualHost("/");
-//        connectionFactory.setHost("rabbitmq-broker");
-//        connectionFactory.setPort(5672);
-//        return connectionFactory;
-//    }
-
     @Bean
     public Queue queue() {
         return new Queue(Constants.QUEUE);
