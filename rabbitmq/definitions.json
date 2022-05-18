@@ -1,0 +1,18 @@
+{
+    "users": [
+      {
+        "name": "admin",  
+        "password_hash": "3280VRZWywxFAEDXanVkEaupWks2LnPgOm5YqvSIymK4ZrH/",
+        "hashing_algorithm": "rabbit_password_hashing_sha256",
+        "tags": "administrator"
+      }
+    ],
+    "queues": [
+    {
+        "name": "rabbit_queue",
+        "vhost": "/",
+        "durable": false,
+        "auto_delete": false
+    }
+]
+}
