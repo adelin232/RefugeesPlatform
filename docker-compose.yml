@@ -81,20 +81,37 @@ services:
         tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   rabbitmq-broker:
-    image: rabbitmq:3.10-management-alpine
     container_name: rabbitmq-broker
     restart: unless-stopped
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile_broker
     ports:
       - "15672:15672"
       - "5672:5672"
+    environment:
+      # proxy
+      VIRTUAL_HOST: $RABBIT_PROXY_ADDRESS
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 15672
+      CERT_NAME: rabbitmq
+    extra_hosts:
+      - "$RABBIT_PROXY_ADDRESS:127.0.0.1"
     networks:
       - rabbitmq
+      - default
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   rabbitmq-listener:
     depends_on:
       - rabbitmq-broker
     container_name: rabbitmq-listener
-    build: ./rabbitmq-listener
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile_listener
     # restart: unless-stopped
     environment:
       - HOST=rabbitmq-broker
@@ -104,6 +121,10 @@ services:
     #   - "5673:5673"
     networks:
       - rabbitmq
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   app:
     container_name: spring-app
@@ -129,7 +150,7 @@ services:
         "spring.jpa.hibernate.ddl-auto" : "update"
       }'
       # rabbitmq
-      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_HOST: rabbitmq-broker
     volumes:
       - /project/.m2:/root/.m2
       - /project/logs:/workspace/logs
