@@ -80,21 +80,30 @@ services:
       options:
         tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    restart: always
+  rabbitmq-broker:
+    image: rabbitmq:3.10-management-alpine
+    container_name: rabbitmq-broker
+    restart: unless-stopped
     ports:
       - "15672:15672"
       - "5672:5672"
+    networks:
+      - rabbitmq
 
   rabbitmq-listener:
+    depends_on:
+      - rabbitmq-broker
     container_name: rabbitmq-listener
     build: ./rabbitmq-listener
-    restart: always
-    ports:
-      - "15673:15673"
-      - "5673:5673"
+    # restart: unless-stopped
+    environment:
+      - HOST=rabbitmq-broker
+      - QUEUE_NAME=rabbit_queue
+    # ports:
+    #   - "15673:15673"
+    #   - "5673:5673"
+    networks:
+      - rabbitmq
 
   app:
     container_name: spring-app
@@ -204,3 +213,4 @@ services:
     
 networks:
     loki:
+    rabbitmq:
