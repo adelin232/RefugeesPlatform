@@ -18,8 +18,11 @@ docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all
 sudo rm -rf ./mysql/mysql-data/*
 
 # remove grafana storage
-sudo rm -rf ./grafana/grafana-storage/*
-mkdir -p grafana
+# sudo rm -rf ./grafana/grafana-storage/$((^| )(?!plugins)[^ ]*)
+find ./grafana/grafana-storage -mindepth 1 ! -regex '^./grafana/grafana-storage/plugins\(/.*\)?' -delete
+
+# give permissions
+sudo chmod -R 777 *
 
 # start new containers
 sudo docker-compose up --force-recreate --detach --build
@@ -47,4 +50,4 @@ for _file in /etc/hosts; do
 done
 
 # show running containers
-docker ps
+docker ps -a
