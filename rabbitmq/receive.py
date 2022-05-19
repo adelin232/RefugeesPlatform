@@ -27,7 +27,7 @@ def on_message(ch, method, properties, body):
 
 def main():
     credentials = pika.PlainCredentials('admin', 'rabbitmq')
-    connection_params = pika.ConnectionParameters(host="rabbitmq-broker", credentials=credentials)
+    connection_params = pika.ConnectionParameters(host="rabbitmq-broker", credentials=credentials, client_properties={'connection_name': 'Python_pika_connection'})
 
     connected = 0
     while not connected:
