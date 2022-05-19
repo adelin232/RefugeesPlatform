@@ -19,6 +19,10 @@ MYSQLDB_ROOT_PASSWORD=$(cat .env | grep "MYSQLDB_ROOT_PASSWORD" | cut -d "=" -f2
 SPRING_RABBITMQ_USERNAME=$(cat .env | grep "SPRING_RABBITMQ_USERNAME" | cut -d "=" -f2 | tr -d "\n")
 SPRING_RABBITMQ_PASSWORD=$(cat .env | grep "SPRING_RABBITMQ_PASSWORD" | cut -d "=" -f2 | tr -d "\n")
 
+# Sleep for 10 seconds
+echo "Sleeping for 10 seconds..."
+sleep 10
+
 echo "Check containers status:"
 # Iterate through array
 for name in ${container_names[@]};
