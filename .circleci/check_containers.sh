@@ -19,9 +19,16 @@ MYSQLDB_ROOT_PASSWORD=$(cat .env | grep "MYSQLDB_ROOT_PASSWORD" | cut -d "=" -f2
 SPRING_RABBITMQ_USERNAME=$(cat .env | grep "SPRING_RABBITMQ_USERNAME" | cut -d "=" -f2 | tr -d "\n")
 SPRING_RABBITMQ_PASSWORD=$(cat .env | grep "SPRING_RABBITMQ_PASSWORD" | cut -d "=" -f2 | tr -d "\n")
 
+PORTAINER_DOCKER_PORT=$(cat .env | grep "PORTAINER_DOCKER_PORT" | cut -d "=" -f2 | tr -d "\n")
+ADMINER_DOCKER_PORT=$(cat .env | grep "ADMINER_DOCKER_PORT" | cut -d "=" -f2 | tr -d "\n")
+SPRING_DOCKER_PORT=$(cat .env | grep "SPRING_DOCKER_PORT" | cut -d "=" -f2 | tr -d "\n")
+RABBITMQ_MANAGEMENT_DOCKER_PORT=$(cat .env | grep "RABBITMQ_MANAGEMENT_DOCKER_PORT" | cut -d "=" -f2 | tr -d "\n")
+GRAFANA_DOCKER_PORT=$(cat .env | grep "GRAFANA_DOCKER_PORT" | cut -d "=" -f2 | tr -d "\n")
+
 # Sleep for 30 seconds
-echo "Sleeping for 30 seconds..."
-sleep 30
+echo ""
+echo "Sleeping for 15 seconds..."
+sleep 15
 
 err=0
 
@@ -48,7 +55,6 @@ do
                 if (( $(docker exec $name mysql -u $MYSQLDB_USER -p$MYSQLDB_ROOT_PASSWORD -e "SELECT @@VERSION;" 2>&1 | grep "Error" -c) >= 1 ))
                 then
                     printf "%-40s %s\n" "      - Database is up" "${RED}x${NORMAL}"
-                    docker logs $name
                     err=-1
                 else
                     printf "%-40s %s\n" "      - Database is up" "${GREEN}✓${NORMAL}"
@@ -58,10 +64,9 @@ do
             # Check adminer
             if [ "$name" == "adminer" ]
             then
-                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" http://localhost:6969) != 200 ))
+                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" http://localhost:$ADMINER_DOCKER_PORT) != 200 ))
                 then
                     printf "%-40s %s\n" "      - Adminer interface is up" "${RED}x${NORMAL}"
-                    docker logs $name
                     err=-1
                 else
                     printf "%-40s %s\n" "      - Adminer interface is up" "${GREEN}✓${NORMAL}"
@@ -71,10 +76,9 @@ do
             # Check portainer
             if [ "$name" == "portainer" ]
             then
-                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" https://localhost:9443) != 200 ))
+                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" https://localhost:$PORTAINER_DOCKER_PORT) != 200 ))
                 then
                     printf "%-40s %s\n" "      - Portainer interface is up" "${RED}x${NORMAL}"
-                    docker logs $name
                     err=-1
                 else
                     printf "%-40s %s\n" "      - Portainer interface is up" "${GREEN}✓${NORMAL}"
@@ -84,10 +88,9 @@ do
             # Check grafana
             if [ "$name" == "grafana" ]
             then
-                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" https://localhost:3000) != 200 ))
+                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" https://localhost:$GRAFANA_DOCKER_PORT) != 200 ))
                 then
                     printf "%-40s %s\n" "      - Grafana interface is up" "${RED}x${NORMAL}"
-                    docker logs $name
                     err=-1
                 else
                     printf "%-40s %s\n" "      - Grafana interface is up" "${GREEN}✓${NORMAL}"
@@ -113,10 +116,9 @@ do
             # Check rabbitmq-broker
             if [ "$name" == "rabbitmq-broker" ]
             then
-                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" http://localhost:15672) != 200 ))
+                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" http://localhost:$RABBITMQ_MANAGEMENT_DOCKER_PORT) != 200 ))
                 then
                     printf "%-40s %s\n" "      - Rabbitmq interface is up" "${RED}x${NORMAL}"
-                    docker logs $name
                     err=-1
                 else
                     printf "%-40s %s\n" "      - Rabbitmq interface is up" "${GREEN}✓${NORMAL}"
@@ -126,7 +128,6 @@ do
                     printf "%-40s %s\n" "      - Has rabbitmq connections" "${GREEN}✓${NORMAL}"
                 else
                     printf "%-40s %s\n" "      - Has rabbitmq connections" "${RED}x${NORMAL}"
-                    docker logs $name
                     err=-1
                 fi
             fi
@@ -134,12 +135,11 @@ do
             # Check rabbitmq-listener
             if [ "$name" == "rabbitmq-listener" ]
             then
-                if (( $(curl -u $SPRING_RABBITMQ_USERNAME:$SPRING_RABBITMQ_PASSWORD http://localhost:15672/api/connections 2>&1 | grep "Python_pika_connection" | wc -l) != 0 ))
+                if (( $(curl -u $SPRING_RABBITMQ_USERNAME:$SPRING_RABBITMQ_PASSWORD http://localhost:$RABBITMQ_MANAGEMENT_DOCKER_PORT/api/connections 2>&1 | grep "Python_pika_connection" | wc -l) != 0 ))
                 then
                     printf "%-40s %s\n" "      - Rabbitmq connection" "${GREEN}✓${NORMAL}"
                 else
                     printf "%-40s %s\n" "      - Rabbitmq connection" "${RED}x${NORMAL}"
-                    docker logs $name
                     err=-1
                 fi
             fi
@@ -147,10 +147,9 @@ do
             # Check spring
             if [ "$name" == "spring-app" ]
             then
-                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" https://localhost:8443) != 200 ))
+                if (( $(curl -L -k -s -o /dev/null -w "%{http_code}" https://localhost:$SPRING_DOCKER_PORT) != 200 ))
                 then
                     printf "%-40s %s\n" "      - Spring website is up" "${RED}x${NORMAL}"
-                    docker logs $name
                     err=-1
                 else
                     printf "%-40s %s\n" "      - Spring website is up" "${GREEN}✓${NORMAL}"
@@ -158,13 +157,15 @@ do
             fi
         else
             printf "%-40s %s\n" "      - Status: $STATUS" "${RED}x${NORMAL}"
-            docker logs $name
             err=-1
         fi
+        # save logs
+        docker logs $name > /tmp/test-results/$name.log 2>&1
     else
         printf "%-40s%s\n" "--> [$name]" "(${RED}✖${NORMAL} )"
         err=-1
     fi
+
 done
 
 # return error
