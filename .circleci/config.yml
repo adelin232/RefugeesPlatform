@@ -27,7 +27,13 @@ jobs:
           command: |
             curl -fsSL https://get.docker.com -o get-docker.sh
             sudo sh get-docker.sh
+            sudo systemctl status docker
+            sudo groupadd docker
+            sudo usermod -aG docker $USER
+            newgrp docker
+            sudo systemctl restart docker
             sudo apt-get install docker-compose-plugin
+            
       - run:
           name: "Start containers"
           command: sudo ./script.sh
