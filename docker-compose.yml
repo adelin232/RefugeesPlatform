@@ -92,7 +92,7 @@ services:
     environment:
       # proxy
       VIRTUAL_HOST: $RABBIT_PROXY_ADDRESS
-      VIRTUAL_PROTO: https
+      # VIRTUAL_PROTO: https
       VIRTUAL_PORT: 15672
       CERT_NAME: rabbitmq
     extra_hosts:
