@@ -1,9 +1,10 @@
 package com.project.controllers;
 
+import com.project.Constants;
 import com.project.models.User;
 import com.project.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -16,16 +17,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.transaction.Transactional;
 import java.util.Map;
 
+@Slf4j
 @Controller
 public class ProfileController {
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private HomeController homeController;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @GetMapping("/profile")
     @Transactional
@@ -38,13 +41,17 @@ public class ProfileController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /profile");
                     model.addAttribute("userForm", new User());
                 } else {
+                    log.info("GET request for /profile from " + user.getId());
                     homeController.addForms(model, user);
                 }
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("GET request for /profile");
         }
 
         return "profile";
@@ -63,8 +70,11 @@ public class ProfileController {
                 userForm.setIsAdmin(false);
 
                 if (user == null) {
+                    log.info("POST request for /profile");
                     userService.createUser(userForm);
+                    rabbitTemplate.convertAndSend(Constants.EXCHANGE, Constants.ROUTING_KEY, email);
                 } else {
+                    log.info("POST request for /profile from " + user.getId());
                     userService.updateUser(userForm);
                 }
 
@@ -72,6 +82,8 @@ public class ProfileController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /profile");
         }
 
         return "profile";

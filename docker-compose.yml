@@ -1,5 +1,68 @@
 version: "3.7"
+
 services:
+  loki:
+    container_name: loki
+    image: grafana/loki:2.5.0
+    container_name: loki
+    volumes:
+      - ./loki:/etc/loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yaml
+    networks:
+      - loki
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:2.5.0
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - loki
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
+  grafana:
+    container_name: grafana
+    build: ./grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - loki
+      - default
+    volumes:
+      - ./grafana/grafana-storage:/var/lib/grafana
+    environment:
+      # grafana
+      GF_SECURITY_ADMIN_USER: $GRAFANA_USER
+      GF_SECURITY_ADMIN_PASSWORD: $GRAFANA_PASSWORD
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+      GF_SERVER_PROTOCOL: https
+      GF_SERVER_CERT_KEY: /etc/grafana/grafana.key
+      GF_SERVER_CERT_FILE: /etc/grafana/grafana.crt
+      # proxy
+      VIRTUAL_HOST: $GRAFANA_PROXY_ADDRESS
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 3000
+      CERT_NAME: grafana
+    extra_hosts:
+      - "$GRAFANA_PROXY_ADDRESS:127.0.0.1"
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
   mysqldb:
     container_name: mysqldb
     build: ./mysql
@@ -12,11 +75,57 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - ./mysql/mysql-data:/var/lib/mysql
-    # networks:
-    #   network-db:
-    #     aliases:
-    #       - mysqldb
-  
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
+  rabbitmq-broker:
+    container_name: rabbitmq-broker
+    restart: unless-stopped
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile_broker
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      # proxy
+      VIRTUAL_HOST: $RABBIT_PROXY_ADDRESS
+      VIRTUAL_PROTO: https
+      VIRTUAL_PORT: 15672
+      CERT_NAME: rabbitmq
+    extra_hosts:
+      - "$RABBIT_PROXY_ADDRESS:127.0.0.1"
+    networks:
+      - rabbitmq
+      - default
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
+  rabbitmq-listener:
+    depends_on:
+      - rabbitmq-broker
+    container_name: rabbitmq-listener
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile_listener
+    # restart: unless-stopped
+    environment:
+      - HOST=rabbitmq-broker
+      - QUEUE_NAME=rabbit_queue
+    # ports:
+    #   - "15673:15673"
+    #   - "5673:5673"
+    networks:
+      - rabbitmq
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
+
   app:
     container_name: spring-app
     depends_on:
@@ -25,7 +134,6 @@ services:
     restart: on-failure
     env_file: ./.env
     ports:
-      # - 6868:$SPRING_DOCKER_PORT
       - 8443:8443
     environment:
       # proxy
@@ -41,49 +149,44 @@ services:
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
         "spring.jpa.hibernate.ddl-auto" : "update"
       }'
+      # rabbitmq
+      SPRING_RABBITMQ_HOST: $SPRING_RABBITMQ_HOST
+      SPRING_RABBITMQ_PORT: $SPRING_RABBITMQ_PORT
+      SPRING_RABBITMQ_USERNAME: $SPRING_RABBITMQ_USERNAME
+      SPRING_RABBITMQ_PASSWORD: $SPRING_RABBITMQ_PASSWORD
     volumes:
       - /project/.m2:/root/.m2
+      - /project/logs:/workspace/logs
     stdin_open: true
     tty: true
     extra_hosts:
       - "$SPRING_PROXY_ADDRESS:127.0.0.1"
-    # networks:
-    #   network-db:
-    #     aliases:
-    #       - app
-    #       - spring-app
-    #   network-proxy:
-    #     aliases:
-    #       - app
-    #       - spring-app
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   adminer:
     container_name: adminer
     depends_on: 
       - mysqldb
-    # image: mcaubrey/adminer
     build: ./adminer
     environment:
       # proxy
       VIRTUAL_HOST: $ADMINER_PROXY_ADDRESS
-      # VIRTUAL_PROTO: https
-      # VIRTUAL_PORT: 6969
       CERT_NAME: adminer
       # adminer
       ADMINER_DEFAULT_SERVER: mysqldb
       ADMINER_DESIGN: 'pepa-linha'
       ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter'
-      # ADMINER_DEFAULT_USERNAME: $MYSQLDB_USER
-      # ADMINER_DEFAULT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
-      # ADMINER_DEFAULT_DATABASE: $MYSQLDB_DATABASE
     ports:
       - 6969:8080
     extra_hosts:
       - "$ADMINER_PROXY_ADDRESS:127.0.0.1"
-    # networks:
-    #   network-proxy:
-    #     aliases:
-    #       - adminer
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   portainer:
     container_name: portainer
@@ -91,7 +194,6 @@ services:
       - mysqldb
       - adminer
       - app
-    # image: portainer/portainer-ce:2.9.3
     build: ./portainer
     container_name: portainer
     restart: unless-stopped
@@ -112,10 +214,10 @@ services:
       CERT_NAME: portainer
     extra_hosts:
       - "$PORTAINER_PROXY_ADDRESS:127.0.0.1"
-    # networks:
-    #   network-proxy:
-    #     aliases:
-    #       - portainer
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -128,19 +230,11 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx/certs:/etc/nginx/certs
-    # networks:
-    #   network-proxy:
-    #     aliases:
-    #       - nginx-proxy
-
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.Name}}|{{.ImageName}}|{{.ImageFullID}}|{{.FullID}}"
     
-# networks:
-#   network-db:
-#     name: spring-mysql
-#   network-proxy:
-#     name: reverse-proxy
-  
-    
-
-# volumes:
-  # portainer_data:
+networks:
+    loki:
+    rabbitmq:

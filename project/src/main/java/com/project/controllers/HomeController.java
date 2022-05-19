@@ -1,15 +1,12 @@
 package com.project.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.models.Rental;
 import com.project.models.Room;
 import com.project.models.User;
 import com.project.services.RentalService;
 import com.project.services.RoomService;
 import com.project.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -23,10 +20,9 @@ import java.util.Map;
 /**
  * Controller for the home page.
  */
+@Slf4j
 @Controller
 public class HomeController {
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UserService userService;
@@ -41,7 +37,6 @@ public class HomeController {
     @Transactional
     public String home(Model model, @AuthenticationPrincipal OidcUser principal) {
         if (principal != null) {
-            int is_new_user = 0;
             Map<String, Object> claims = principal.getClaims();
 
             if (claims.containsKey("email")) {
@@ -49,15 +44,16 @@ public class HomeController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
-                    is_new_user = 1;
+                    log.info("GET request for / or /index");
                 } else {
+                    log.info("GET request for / or /index from " + user.getId());
                     addForms(model, user);
                 }
             }
 
             model.addAttribute("profile", principal.getClaims());
-//            model.addAttribute("profileJson", claimsToJsonString);
-            model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for / or /index");
         }
 
         return "index";
@@ -75,18 +71,5 @@ public class HomeController {
         }
 
         model.addAttribute("userForm", user);
-    }
-
-
-    private String claimsToJson(Map<String, Object> claims) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.findAndRegisterModules();
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(claims);
-        } catch (JsonProcessingException jpe) {
-            log.error("Error parsing claims to JSON", jpe);
-        }
-
-        return "Error parsing claims to JSON.";
     }
 }

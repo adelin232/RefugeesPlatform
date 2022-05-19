@@ -8,6 +8,7 @@ import com.project.models.User;
 import com.project.services.RentalService;
 import com.project.services.RoomService;
 import com.project.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -26,6 +27,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for the rooms page.
+ */
+@Slf4j
 @Controller
 public class RoomController {
 
@@ -56,8 +61,10 @@ public class RoomController {
                 user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /rooms");
                     is_new_user = 1;
                 } else {
+                    log.info("GET request for /rooms from " + user.getId());
                     model.addAttribute("roomForm", new Room());
                     homeController.addForms(model, user);
                     addRentalAndRoomsForm(model, user);
@@ -68,6 +75,8 @@ public class RoomController {
 
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /rooms");
         }
 
         return "rooms";
@@ -84,8 +93,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("POST request for /rooms");
                     return "redirect:index";
                 } else {
+                    log.info("POST request for /rooms from " + user.getId());
                     roomForm.setIsAvail(true);
                     roomService.createRoom(roomForm);
                     model.addAttribute("roomForm", roomForm);
@@ -97,6 +108,8 @@ public class RoomController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /rooms");
         }
 
         return "rooms";
@@ -131,8 +144,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /room_view");
                     is_new_user = 1;
                 } else {
+                    log.info("POST request for /room_view from " + user.getId());
                     Room room = roomService.getRoom(roomId);
                     Rental rental = rentalService.findRentalByUserId(user.getId());
 
@@ -160,6 +175,8 @@ public class RoomController {
 
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /room_view");
         }
 
         return "room_view";
@@ -177,8 +194,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /my_room");
                     is_new_user = 1;
                 } else {
+                    log.info("GET request for /my_room from " + user.getId());
                     Rental rental = rentalService.findRentalByUserId(user.getId());
 
                     if (rental == null) {
@@ -200,6 +219,8 @@ public class RoomController {
 
             model.addAttribute("profile", principal.getClaims());
             model.addAttribute("is_new_user", is_new_user);
+        } else {
+            log.info("GET request for /my_room");
         }
 
         return "my_room";
@@ -208,7 +229,7 @@ public class RoomController {
     @PostMapping("/my_room")
     @Transactional
     public String handleMyRoomView(Model model, @AuthenticationPrincipal OidcUser principal, @RequestParam(name="roomId") Long roomId,
-                                   @ModelAttribute("rentalForm") Rental rentalForm) throws InterruptedException {
+                                   @ModelAttribute("rentalForm") Rental rentalForm) {
         if (principal != null) {
             Map<String, Object> claims = principal.getClaims();
 
@@ -217,8 +238,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("POST request for /my_room");
                     return "redirect:index";
                 } else {
+                    log.info("POST request for /my_room from " + user.getId());
                     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                             .withResolverStyle(ResolverStyle.STRICT);
                     DateValidator validator = new DateValidatorUsingDateTimeFormatter(dateFormatter);
@@ -242,6 +265,8 @@ public class RoomController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /my_room");
         }
 
         return "my_room";
@@ -258,8 +283,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("POST request for /room_edit");
                     return "redirect:index";
                 } else {
+                    log.info("POST request for /room_edit from " + user.getId());
                     roomService.updateRoom(roomForm);
                 }
 
@@ -267,6 +294,8 @@ public class RoomController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("POST request for /room_edit");
         }
 
         return "redirect:rooms";
@@ -283,8 +312,10 @@ public class RoomController {
                 User user = userService.findUserByEmail(email);
 
                 if (user == null) {
+                    log.info("GET request for /room_remove");
                     return "redirect:index";
                 } else {
+                    log.info("GET request for /room_remove from " + user.getId());
                     roomService.deleteRoom(roomId);
                 }
 
@@ -292,6 +323,8 @@ public class RoomController {
             }
 
             model.addAttribute("profile", principal.getClaims());
+        } else {
+            log.info("GET request for /room_remove");
         }
 
         return "redirect:rooms";
