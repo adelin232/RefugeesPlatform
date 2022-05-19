@@ -1,5 +1,6 @@
 package com.project.controllers;
 
+import com.project.Constants;
 import com.project.DateValidator;
 import com.project.DateValidatorUsingDateTimeFormatter;
 import com.project.models.Rental;
@@ -9,6 +10,7 @@ import com.project.services.RentalService;
 import com.project.services.RoomService;
 import com.project.services.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -45,6 +47,9 @@ public class RoomController {
 
     @Autowired
     private HomeController homeController;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     private Boolean wrongDate = Boolean.FALSE;
 
@@ -257,6 +262,7 @@ public class RoomController {
 
                     rentalForm.setUserId(user.getId());
                     rentalForm.setRoomId(roomId);
+                    rabbitTemplate.convertAndSend(Constants.EXCHANGE, Constants.ROUTING_KEY, email + "&");
                     rentalService.createRental(rentalForm);
                     model.addAttribute("rentalForm", rentalForm);
                 }

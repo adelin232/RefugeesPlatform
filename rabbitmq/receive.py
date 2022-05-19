@@ -4,14 +4,18 @@ import smtplib, ssl
 host = os.environ.get('HOST')
 queue = os.environ.get('QUEUE_NAME')
 
-def send_mail(email):
+def send_mail(email, type):
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
     sender_email = "ukrainianrefugees123@gmail.com"  # Enter your address
     receiver_email = email  # Enter receiver address
     password = "fvpvdrfkicykdcdc"
-    subject = "Account Created"
-    text = "You have successfully created your account on our website!"
+    if type == "new_user":
+        subject = "Account Created"
+        text = "You have successfully created your account on our website!"
+    else:
+        subject = "Room Rented"
+        text = "You have successfully rented a room on our website!"
     message = 'Subject: {}\n\n{}'.format(subject, text)
 
     context = ssl.create_default_context()
@@ -23,7 +27,11 @@ def send_mail(email):
 def on_message(ch, method, properties, body):
     message = body.decode('UTF-8')
     print(" [x] Received %r" % message)
-    send_mail(message.replace('\'', ''))
+    if "&" in message:
+        message = message.replace('&', '')
+        send_mail(message.replace('\'', ''), "rent_room")
+    else:
+        send_mail(message.replace('\'', ''), "new_user")
 
 def main():
     credentials = pika.PlainCredentials('admin', 'rabbitmq')
