@@ -8,6 +8,9 @@ jobs:
       - run:
           name: "Start containers"
           command: sudo ./script.sh
+      - run:
+          name: "Check containers"
+          command: sudo ./.circleci/check_containers.sh
       - store_artifacts:
           path: /tmp/test-results
           destination: raw-test-output

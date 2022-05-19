@@ -5,11 +5,6 @@ NORMAL=$(tput sgr0)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 
-# Declare container names
-#declare -a container_names=("spring-app" "mysqldb" "adminer" "portainer" "loki" "promtail" "grafana" "rabbitmq-broker" "rabbitmq-listener" "nginx-proxy")
-# Declare proxies
-declare -a proxies=("spring" "adminer" "portainer" "grafana" "rabbitmq")
-
 # Get container names from docker-compose
 mapfile -t container_names < <(cat docker-compose.yml | grep "container_name" | cut -d ":" -f2 | tr -d " ")
 for i in "${!container_names[@]}";
