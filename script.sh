@@ -24,7 +24,7 @@ sudo rm -rf ./grafana/grafana-storage/*
 sudo chmod -R 777 *
 
 # start new containers
-docker-compose up --force-recreate --detach --build
+sudo docker-compose up --force-recreate --detach --build
 echo ""
 sleep 1
 
