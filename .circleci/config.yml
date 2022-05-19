@@ -24,7 +24,7 @@ jobs:
       - checkout
       - run:
           name: "TEST"
-          command: sudo ./script.sh
+          command: ls
       - store_artifacts:
           path: /tmp/test-results
           destination: raw-test-output
