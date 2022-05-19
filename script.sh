@@ -20,6 +20,9 @@ sudo rm -rf ./mysql/mysql-data/*
 # remove grafana logs
 sudo rm -rf ./grafana/grafana-storage/*
 
+# set permissions
+sudo chmod -R 777 *
+
 # start new containers
 docker-compose up --force-recreate --detach --build
 echo ""
