@@ -20,8 +20,8 @@ SPRING_RABBITMQ_USERNAME=$(cat .env | grep "SPRING_RABBITMQ_USERNAME" | cut -d "
 SPRING_RABBITMQ_PASSWORD=$(cat .env | grep "SPRING_RABBITMQ_PASSWORD" | cut -d "=" -f2 | tr -d "\n")
 
 # Sleep for 30 seconds
-echo "Sleeping for 30 seconds..."
-sleep 30
+# echo "Sleeping for 30 seconds..."
+# sleep 30
 
 echo "Check containers status:"
 # Iterate through array
@@ -150,5 +150,6 @@ do
         fi
     else
         printf "%-40s%s\n" "--> [$name]" "(${RED}✖${NORMAL} )"
+        docker logs $name
     fi
 done
