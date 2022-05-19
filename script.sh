@@ -40,6 +40,9 @@ for _file in /etc/hosts; do
     if ! grep -qF '127.0.0.1        local.proxy.grafana' $_file; then
         sudo echo "127.0.0.1        local.proxy.grafana" >> $_file
     fi
+    if ! grep -qF '127.0.0.1        local.proxy.rabbitmq' $_file; then
+        sudo echo "127.0.0.1        local.proxy.rabbitmq" >> $_file
+    fi
 done
 
 # show running containers

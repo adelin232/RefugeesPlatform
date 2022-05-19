@@ -4,7 +4,6 @@ services:
   loki:
     container_name: loki
     image: grafana/loki:2.5.0
-    container_name: loki
     volumes:
       - ./loki:/etc/loki
     ports:
@@ -20,7 +19,6 @@ services:
   promtail:
     container_name: promtail
     image: grafana/promtail:2.5.0
-    container_name: promtail
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers
       - ./promtail/promtail-config.yml:/etc/promtail/config.yml
@@ -35,7 +33,6 @@ services:
   grafana:
     container_name: grafana
     build: ./grafana
-    container_name: grafana
     ports:
       - "3000:3000"
     networks:
@@ -92,7 +89,7 @@ services:
     environment:
       # proxy
       VIRTUAL_HOST: $RABBIT_PROXY_ADDRESS
-      VIRTUAL_PROTO: https
+      # VIRTUAL_PROTO: https
       VIRTUAL_PORT: 15672
       CERT_NAME: rabbitmq
     extra_hosts:
@@ -195,7 +192,6 @@ services:
       - adminer
       - app
     build: ./portainer
-    container_name: portainer
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
