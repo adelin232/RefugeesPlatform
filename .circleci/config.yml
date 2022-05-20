@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  main:
+  test:
     machine: true
     steps:
       - checkout  
@@ -21,9 +21,10 @@ jobs:
       #     path: /tmp/test-logs/spring-tests
       #     destination: test-logs/spring-tests
       - store_test_results:
-          path: /project/test-results
+          path: ./project/test-results
+          destination: test-results/
 
 workflows:
   main-workflow:
     jobs:
-      - main
+      - test
