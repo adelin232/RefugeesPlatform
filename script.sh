@@ -18,36 +18,31 @@ docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all
 sudo rm -rf ./mysql/mysql-data/*
 
 # remove grafana storage
-# sudo rm -rf ./grafana/grafana-storage/$((^| )(?!plugins)[^ ]*)
+# sudo rm -rf ./grafana/grafana-storage/*
 find ./grafana/grafana-storage -mindepth 1 ! -regex '^./grafana/grafana-storage/plugins\(/.*\)?' -delete
 
+# remove portainer storage
+sudo rm -rf ./portainer/portainer-data/*
+
 # give permissions
-sudo chmod -R 777 *
+sudo chmod -R 777 ./
 
 # start new containers
 sudo docker-compose up --force-recreate --detach --build
-echo ""
-sleep 1
 
-# add hostnames to /etc/hosts
+# get proxy names
+mapfile -t proxy_address < <(cat .env | grep "PROXY_ADDRESS" | cut -d "=" -f2)
 
+# add proxy names to /etc/hosts
 for _file in /etc/hosts; do
-    if ! grep -qF '127.0.0.1        local.proxy.spring' $_file; then
-        sudo echo "127.0.0.1        local.proxy.spring" >> $_file
-    fi
-    if ! grep -qF '127.0.0.1        local.proxy.adminer' $_file; then
-        sudo echo "127.0.0.1        local.proxy.adminer" >> $_file
-    fi
-    if ! grep -qF '127.0.0.1        local.proxy.portainer' $_file; then
-        sudo echo "127.0.0.1        local.proxy.portainer" >> $_file
-    fi
-    if ! grep -qF '127.0.0.1        local.proxy.grafana' $_file; then
-        sudo echo "127.0.0.1        local.proxy.grafana" >> $_file
-    fi
-    if ! grep -qF '127.0.0.1        local.proxy.rabbitmq' $_file; then
-        sudo echo "127.0.0.1        local.proxy.rabbitmq" >> $_file
-    fi
+    for _proxy in ${proxy_address[@]}; do
+        if ! grep -qF '127.0.0.1        $_proxy' $_file; then
+            sudo echo "127.0.0.1        $_proxy" >> $_file
+        fi
+    done
 done
 
 # show running containers
+sleep 2
+echo ""
 docker ps -a
