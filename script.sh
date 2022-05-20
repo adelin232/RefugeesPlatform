@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# !.!.!.!.!.!.!.!.!.!
+######################### 
+#                       #
+#  ALWAYS RUN AS SUDO   #
+#                       #
+#########################
 
-# ALWAYS RUN AS SUDO
-
-# ^.^.^.^.^.^.^.^.^.^
+# set user and group id
+export UID_GID="$(id -u):$(id -g)"
 
 # stop running containers
 docker-compose down --remove-orphans
@@ -12,23 +15,13 @@ echo ""
 sleep 1
 
 # install plugins
-docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-
-# remove database files
-sudo rm -rf ./mysql/mysql-data/*
-
-# remove grafana storage
-# sudo rm -rf ./grafana/grafana-storage/*
-find ./grafana/grafana-storage -mindepth 1 ! -regex '^./grafana/grafana-storage/plugins\(/.*\)?' -delete
-
-# remove portainer storage
-sudo rm -rf ./portainer/portainer-data/*
-
-# give permissions
-sudo chmod -R 777 ./
+if ! [ "$(docker plugin inspect loki)" ];
+then
+    docker plugin install grafana/loki-docker-driver:2.5.0 --alias loki --grant-all-permissions
+fi
 
 # start new containers
-sudo docker-compose up --force-recreate --detach --build
+docker-compose up --force-recreate --detach --build
 
 # get proxy names
 mapfile -t proxy_address < <(cat .env | grep "PROXY_ADDRESS" | cut -d "=" -f2)
