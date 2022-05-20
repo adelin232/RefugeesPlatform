@@ -43,6 +43,7 @@ services:
       - default
     volumes:
       - ./grafana/grafana-storage:/var/lib/grafana
+    user: "${UID_GID}"
     environment:
       # grafana
       GF_SECURITY_ADMIN_USER: $GRAFANA_USER
@@ -73,6 +74,7 @@ services:
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
     ports:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+    user: "${UID_GID}"
     volumes:
       - ./mysql/mysql-data:/var/lib/mysql
     logging:
@@ -196,6 +198,7 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+    user: "${UID_GID}"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
