@@ -15,13 +15,13 @@ jobs:
           name: "Run spring tests"
           command: ./.circleci/run_spring_tests.sh
       - store_artifacts:
-          path: /tmp/test-logs/containers
-          destination: test-logs/containers
-      - store_artifacts:
-          path: /tmp/test-logs/spring-tests
-          destination: test-logs/spring-tests
-      # - store_test_results:
-      #     path: /tmp/test-results
+          path: /tmp/test-logs/
+          destination: test-logs/
+      # - store_artifacts:
+      #     path: /tmp/test-logs/spring-tests
+      #     destination: test-logs/spring-tests
+      - store_test_results:
+          path: /project/test-results
 
 workflows:
   main-workflow:
