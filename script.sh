@@ -12,20 +12,11 @@ echo ""
 sleep 1
 
 # install plugins
-docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+if ! [ "$(docker plugin inspect loki)" ];
+then
+    docker plugin install grafana/loki-docker-driver:2.5.0 --alias loki --grant-all-permissions
+fi
 
-# remove database files
-sudo rm -rf ./mysql/mysql-data/*
-
-# remove grafana storage
-# sudo rm -rf ./grafana/grafana-storage/*
-find ./grafana/grafana-storage -mindepth 1 ! -regex '^./grafana/grafana-storage/plugins\(/.*\)?' -delete
-
-# remove portainer storage
-sudo rm -rf ./portainer/portainer-data/*
-
-# give permissions
-sudo chmod -R 777 ./
 
 # start new containers
 sudo docker-compose up --force-recreate --detach --build
