@@ -176,7 +176,7 @@ services:
       # adminer
       ADMINER_DEFAULT_SERVER: mysqldb
       ADMINER_DESIGN: 'pepa-linha'
-      ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter'
+      ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter version-noverify foreign-system'
     ports:
       - $ADMINER_DOCKER_PORT:$ADMINER_LOCAL_PORT
     extra_hosts:
