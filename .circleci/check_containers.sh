@@ -26,7 +26,7 @@ RABBITMQ_MANAGEMENT_DOCKER_PORT=$(cat .env | grep "RABBITMQ_MANAGEMENT_DOCKER_PO
 GRAFANA_DOCKER_PORT=$(cat .env | grep "GRAFANA_DOCKER_PORT" | cut -d "=" -f2 | tr -d "\n")
 
 # Create logs folder
-mkdir -p /tmp/test-logs
+mkdir -p /tmp/test-logs/containers
 
 # Sleep for 30 seconds
 echo ""
@@ -164,7 +164,7 @@ do
             err=-1
         fi
         # save logs
-        docker logs $name > /tmp/test-logs/$name.log 2>&1
+        docker logs $name > /tmp/test-logs/containers/$name.log 2>&1
     else
         printf "%-40s%s\n" "--> [$name]" "(${RED}✖${NORMAL} )"
         err=-1
