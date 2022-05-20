@@ -25,11 +25,15 @@ SPRING_DOCKER_PORT=$(cat .env | grep "SPRING_DOCKER_PORT" | cut -d "=" -f2 | tr 
 RABBITMQ_MANAGEMENT_DOCKER_PORT=$(cat .env | grep "RABBITMQ_MANAGEMENT_DOCKER_PORT" | cut -d "=" -f2 | tr -d "\n")
 GRAFANA_DOCKER_PORT=$(cat .env | grep "GRAFANA_DOCKER_PORT" | cut -d "=" -f2 | tr -d "\n")
 
+# Create logs folder
+mkdir -p /tmp/test-logs
+
 # Sleep for 30 seconds
 echo ""
 echo "Sleeping for 15 seconds..."
 sleep 15
 
+# Set error variable
 err=0
 
 echo "Check containers status:"
@@ -160,7 +164,7 @@ do
             err=-1
         fi
         # save logs
-        docker logs $name > /tmp/test-results/$name.log 2>&1
+        docker logs $name > /tmp/test-logs/$name.log 2>&1
     else
         printf "%-40s%s\n" "--> [$name]" "(${RED}✖${NORMAL} )"
         err=-1

@@ -12,10 +12,10 @@ jobs:
           name: "Check containers"
           command: sudo ./.circleci/check_containers.sh
       - store_artifacts:
-          path: /tmp/test-results
-          destination: raw-test-output
-      - store_test_results:
-          path: /tmp/test-results
+          path: /tmp/test-logs
+          destination: test-logs
+      # - store_test_results:
+      #     path: /tmp/test-results
 
 workflows:
   main-workflow:
