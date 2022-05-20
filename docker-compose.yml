@@ -4,11 +4,11 @@ services:
   loki:
     container_name: loki
     image: grafana/loki:2.5.0
-    container_name: loki
+    restart: unless-stopped
     volumes:
       - ./loki:/etc/loki
     ports:
-      - "3100:3100"
+      - $LOKI_DOCKER_PORT:$LOKI_LOCAL_PORT
     command: -config.file=/etc/loki/loki-config.yaml
     networks:
       - loki
@@ -20,7 +20,7 @@ services:
   promtail:
     container_name: promtail
     image: grafana/promtail:2.5.0
-    container_name: promtail
+    restart: unless-stopped
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers
       - ./promtail/promtail-config.yml:/etc/promtail/config.yml
@@ -35,9 +35,9 @@ services:
   grafana:
     container_name: grafana
     build: ./grafana
-    container_name: grafana
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - $GRAFANA_DOCKER_PORT:$GRAFANA_LOCAL_PORT
     networks:
       - loki
       - default
@@ -86,13 +86,13 @@ services:
     build:
       context: ./rabbitmq
       dockerfile: Dockerfile_broker
+    restart: unless-stopped
     ports:
-      - "15672:15672"
-      - "5672:5672"
+      - $RABBITMQ_MANAGEMENT_DOCKER_PORT:$RABBITMQ_MANAGEMENT_LOCAL_PORT
+      - $RABBITMQ_DOCKER_PORT:$RABBITMQ_LOCAL_PORT
     environment:
       # proxy
       VIRTUAL_HOST: $RABBIT_PROXY_ADDRESS
-      VIRTUAL_PROTO: https
       VIRTUAL_PORT: 15672
       CERT_NAME: rabbitmq
     extra_hosts:
@@ -112,13 +112,10 @@ services:
     build:
       context: ./rabbitmq
       dockerfile: Dockerfile_listener
-    # restart: unless-stopped
+    restart: unless-stopped
     environment:
       - HOST=rabbitmq-broker
       - QUEUE_NAME=rabbit_queue
-    # ports:
-    #   - "15673:15673"
-    #   - "5673:5673"
     networks:
       - rabbitmq
     logging:
@@ -131,15 +128,15 @@ services:
     depends_on:
       - mysqldb
     build: ./project
-    restart: on-failure
+    restart: unless-stopped
     env_file: ./.env
     ports:
-      - 8443:8443
+      - $SPRING_DOCKER_PORT:$SPRING_LOCAL_PORT
     environment:
       # proxy
       VIRTUAL_HOST: $SPRING_PROXY_ADDRESS
       VIRTUAL_PROTO: https
-      VIRTUAL_PORT: 8443
+      VIRTUAL_PORT: $SPRING_DOCKER_PORT
       CERT_NAME: spring
       # spring
       SPRING_APPLICATION_JSON: '{
@@ -171,6 +168,7 @@ services:
     depends_on: 
       - mysqldb
     build: ./adminer
+    restart: unless-stopped
     environment:
       # proxy
       VIRTUAL_HOST: $ADMINER_PROXY_ADDRESS
@@ -178,9 +176,9 @@ services:
       # adminer
       ADMINER_DEFAULT_SERVER: mysqldb
       ADMINER_DESIGN: 'pepa-linha'
-      ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter'
+      ADMINER_PLUGINS: 'tables-filter tinymce dump-json dump-alter version-noverify foreign-system'
     ports:
-      - 6969:8080
+      - $ADMINER_DOCKER_PORT:$ADMINER_LOCAL_PORT
     extra_hosts:
       - "$ADMINER_PROXY_ADDRESS:127.0.0.1"
     logging:
@@ -195,7 +193,6 @@ services:
       - adminer
       - app
     build: ./portainer
-    container_name: portainer
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -204,13 +201,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./portainer/portainer-data:/data
     ports:
-      # - 9000:9000   # http
-      - 9443:9443   # https
+      - $PORTAINER_DOCKER_PORT:$PORTAINER_LOCAL_PORT
     environment:
       #proxy
       VIRTUAL_HOST: $PORTAINER_PROXY_ADDRESS
       VIRTUAL_PROTO: https
-      VIRTUAL_PORT: 9443
+      VIRTUAL_PORT: $PORTAINER_DOCKER_PORT
       CERT_NAME: portainer
     extra_hosts:
       - "$PORTAINER_PROXY_ADDRESS:127.0.0.1"
@@ -224,6 +220,7 @@ services:
     depends_on:
       - portainer
     image: jwilder/nginx-proxy
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443

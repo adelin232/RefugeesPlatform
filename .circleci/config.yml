@@ -1,26 +1,29 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+  main:
+    machine: true
     steps:
-      - checkout
+      - checkout  
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "Start containers"
+          command: sudo ./script.sh
+      - run:
+          name: "Check containers"
+          command: ./.circleci/check_containers.sh
+      - run:
+          name: "Run spring tests"
+          command: ./.circleci/run_spring_tests.sh
+      - store_artifacts:
+          path: /tmp/test-logs/containers
+          destination: test-logs/containers
+      - store_artifacts:
+          path: /tmp/test-logs/spring-tests
+          destination: test-logs/spring-tests
+      # - store_test_results:
+      #     path: /tmp/test-results
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  main-workflow:
     jobs:
-      - say-hello
+      - main
