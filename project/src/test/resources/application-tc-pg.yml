@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:tc:mysql:8.0.28://localhost:33066/db_refugees?user=root?password=123456
+    username: root
+    password: 123456
