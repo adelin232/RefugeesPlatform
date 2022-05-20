@@ -14,15 +14,9 @@ jobs:
       - run:
           name: "Run spring tests"
           command: ./.circleci/run_spring_tests.sh
-      - run:
-          name: "Print folder structure"
-          command: sudo ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
       - store_artifacts:
           path: /tmp/test-logs/
           destination: test-logs/
-      # - store_artifacts:
-      #     path: /tmp/test-logs/spring-tests
-      #     destination: test-logs/spring-tests
       - store_test_results:
           path: ./project/test-results/
           destination: test-results/
