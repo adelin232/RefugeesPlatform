@@ -4,3 +4,4 @@
 ./portainer/portainer-data/.*
 ./grafana/grafana-storage/*
 ./grafana/grafana-storage/.*
+
