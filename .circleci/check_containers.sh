@@ -28,10 +28,10 @@ GRAFANA_DOCKER_PORT=$(cat .env | grep "GRAFANA_DOCKER_PORT" | cut -d "=" -f2 | t
 # Create logs folder
 mkdir -p /tmp/test-logs/containers
 
-# Sleep for 30 seconds
+# Sleep for 20 seconds
 echo ""
-echo "Sleeping for 30 seconds..."
-sleep 30
+echo "Sleeping for 20 seconds..."
+sleep 20
 
 # Set error variable
 err=0
