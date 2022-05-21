@@ -170,7 +170,7 @@
 				</executions>
 				<configuration>
 					<includes>
-						<include>**/*IT.java</include>
+						<include>**/*.java</include>
 					</includes>
 					<parallel>none</parallel>
 				</configuration>
