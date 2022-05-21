@@ -198,12 +198,12 @@ public class RoomController {
                     is_new_user = 1;
                 } else {
                     log.info("GET request for /my_room from " + user.getId());
-                    Rental rental = rentalService.findRentalByUserId(user.getId());
+                    Rental rentalForm = rentalService.findRentalByUserId(user.getId());
 
-                    if (rental == null) {
+                    if (rentalForm == null) {
                         return "redirect:rooms";
                     } else {
-                        long roomId_ = rental.getRoomId();
+                        long roomId_ = rentalForm.getRoomId();
 
                         if (!Objects.equals(roomId_, roomId)) {
                             return "redirect:my_room?roomId=" + roomId_;
@@ -211,6 +211,7 @@ public class RoomController {
 
                         Room room = roomService.getRoom(roomId_);
                         model.addAttribute("roomForm", room);
+                        model.addAttribute("rentalForm", rentalForm);
                     }
                 }
 
@@ -246,7 +247,8 @@ public class RoomController {
                             .withResolverStyle(ResolverStyle.STRICT);
                     DateValidator validator = new DateValidatorUsingDateTimeFormatter(dateFormatter);
 
-                    if (!validator.isValid(rentalForm.getStartDate()) || !validator.isValid(rentalForm.getEndDate())) {
+                    if (!validator.isValid(rentalForm.getStartDate()) || !validator.isValid(rentalForm.getEndDate()) ||
+                            !validator.isStartBeforeEnd(rentalForm.getStartDate(), rentalForm.getEndDate())) {
                         wrongDate = true;
                         return "redirect:room_view?roomId=" + roomId;
                     }
