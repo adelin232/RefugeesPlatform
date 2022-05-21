@@ -3,6 +3,7 @@ version: 2.1
 jobs:
   test:
     machine: true
+    resource_class: medium
     steps:
       - checkout  
       - run:
