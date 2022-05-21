@@ -30,8 +30,8 @@ mkdir -p /tmp/test-logs/containers
 
 # Sleep for 30 seconds
 echo ""
-echo "Sleeping for 15 seconds..."
-sleep 15
+echo "Sleeping for 30 seconds..."
+sleep 30
 
 # Set error variable
 err=0

@@ -86,6 +86,9 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                        <div th:if="${wrongPhone}" class="alert alert-danger" role="alert">
+                                            Wrong Phone Format, please try again!
+                                        </div>
                                         <form method="POST" class="form-signin" style="text-align: center" th:object="${userForm}" th:action="@{/profile}">
                                             <tr>
                                                 <th style="font-size: 20px;">

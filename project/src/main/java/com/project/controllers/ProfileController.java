@@ -30,6 +30,8 @@ public class ProfileController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    private Boolean wrongPhone = Boolean.FALSE;
+
     @GetMapping("/profile")
     @Transactional
     public String profile(Model model, @AuthenticationPrincipal OidcUser principal) {
@@ -39,6 +41,11 @@ public class ProfileController {
             if (claims.containsKey("email")) {
                 String email = (String) claims.get("email");
                 User user = userService.findUserByEmail(email);
+
+                if (wrongPhone) {
+                    model.addAttribute("wrongPhone", new Object());
+                    wrongPhone = false;
+                }
 
                 if (user == null) {
                     log.info("GET request for /profile");
@@ -68,6 +75,11 @@ public class ProfileController {
                 User user = userService.findUserByEmail(email);
                 userForm.setEmail(email);
                 userForm.setIsAdmin(false);
+
+                if (!userService.isPhoneCorrect(userForm.getPhone())) {
+                    wrongPhone = true;
+                    return "redirect:profile";
+                }
 
                 if (user == null) {
                     log.info("POST request for /profile");

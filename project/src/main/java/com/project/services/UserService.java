@@ -60,4 +60,22 @@ public class UserService {
     public List<User> getUsers() {
         return userRepository.findAll();
     }
+
+    public boolean isPhoneCorrect(String phone) {
+        if (phone.getBytes()[0] != '+' || phone.length() > 12)
+            return false;
+        return isNumeric(phone.substring(1));
+    }
+
+    private static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
 }
