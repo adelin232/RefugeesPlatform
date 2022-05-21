@@ -147,7 +147,7 @@ public class RoomController {
                     log.info("GET request for /room_view");
                     is_new_user = 1;
                 } else {
-                    log.info("POST request for /room_view from " + user.getId());
+                    log.info("GET request for /room_view from " + user.getId());
                     Room room = roomService.getRoom(roomId);
                     Rental rental = rentalService.findRentalByUserId(user.getId());
 

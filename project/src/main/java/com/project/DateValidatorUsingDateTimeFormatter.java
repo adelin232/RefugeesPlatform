@@ -48,7 +48,8 @@ public class DateValidatorUsingDateTimeFormatter implements DateValidator {
         monthY = Integer.parseInt(fixedLengthListY.get(1));
         yearX = Integer.parseInt(fixedLengthListX.get(2));
         yearY = Integer.parseInt(fixedLengthListY.get(2));
+        System.out.println(dayX + " " + dayY);
 
-        return dayX <= dayY && monthX <= monthY && yearY <= yearX;
+        return dayX <= dayY && monthX <= monthY && yearX <= yearY;
     }
 }
