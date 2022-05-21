@@ -16,6 +16,8 @@ public class UserTestIT extends BaseIT {
 
     @BeforeEach
     void insertUsers() {
+        userRepository.deleteAll();
+
         for (int i = 0; i < 5; ++i) {
             User user = new User();
             user.setEmail("me@gmail.com");

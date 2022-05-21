@@ -16,6 +16,8 @@ public class RoomTestIT extends BaseIT {
 
     @BeforeEach
     void insertRooms() {
+        roomRepository.deleteAll();
+
         for (int i = 0; i < 5; ++i) {
             Room room = new Room();
             room.setNum(42L);
