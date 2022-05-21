@@ -16,8 +16,9 @@ public class RentalTestIT extends BaseIT {
 
     @BeforeEach
     void insertRentals() {
-        for (int i = 0; i < 5; ++i) {
-            rentalRepository.save(new Rental());
+        for (long i = 1; i <= 5; ++i) {
+            Rental rental = new Rental(i, i, i, "05/06/2022", "06/07/2022");
+            rentalRepository.save(rental);
         }
     }
 

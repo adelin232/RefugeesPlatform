@@ -17,7 +17,16 @@ public class RoomTestIT extends BaseIT {
     @BeforeEach
     void insertRooms() {
         for (int i = 0; i < 5; ++i) {
-            roomRepository.save(new Room());
+            Room room = new Room();
+            room.setNum(42L);
+            room.setFloor("First Floor");
+            room.setSize(3L);
+            room.setIsAvail(true);
+            room.setLink("url");
+            room.setAddress("url");
+            room.setLat(46.0125);
+            room.setLon(25.0567);
+            roomRepository.save(room);
         }
     }
 

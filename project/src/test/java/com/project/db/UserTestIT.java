@@ -17,7 +17,13 @@ public class UserTestIT extends BaseIT {
     @BeforeEach
     void insertUsers() {
         for (int i = 0; i < 5; ++i) {
-            userRepository.save(new User());
+            User user = new User();
+            user.setEmail("me@gmail.com");
+            user.setPhone("0758664153");
+            user.setFirstName("George");
+            user.setLastName("Smith");
+            user.setIsAdmin(false);
+            userRepository.save(user);
         }
     }
 
