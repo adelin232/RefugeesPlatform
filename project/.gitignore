@@ -6,7 +6,7 @@ target/
 
 ### Logs ###
 logs/
-
+test-results/
 ### STS ###
 .apt_generated
 .classpath

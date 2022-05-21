@@ -6,6 +6,7 @@
       layout:decorator="layouts/default">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/gif/png" href="https://www.erc.edu/assets/img/image.png">
     <title>News</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css">
@@ -47,6 +48,30 @@
         flex: 1 1 auto;
     }
 
+    .news:link {
+      color: black;
+      background-color: transparent;
+      text-decoration: none;
+    }
+
+    .news:visited {
+      color: black;
+      background-color: transparent;
+      text-decoration: none;
+    }
+
+    .news:hover {
+      color: black;
+      background-color: transparent;
+      text-decoration: underline;
+    }
+
+    .news:active {
+      color: black;
+      background-color: transparent;
+      text-decoration: underline;
+    }
+
 </style>
 <body>
 <header>
@@ -61,24 +86,21 @@
     <div class="content">
         <a sec:authorize="isAuthenticated()"> <a th:if="${is_new_user == 1}"> <meta http-equiv='refresh' content='0; URL=/profile'></a> </a>
 
-        <div class="container-fluid">
+        <div class="container-xl" th:each="news : ${news_list}">
             <div class="row">
                 <div class="col mt-3">
                     <div class="card">
                         <div class="card-horizontal">
                             <div class="img-square-wrapper">
-                                <img class="img-fluid" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5J5uC0m7O0Pr5AW7unEscaGy0FwRMhAUGQw&usqp=CAU" width="540" height="300" alt="Card image cap">
+                                <img class="img-fluid" th:src="${news.image_url}" width="480" height="270" alt="Card image cap">
                             </div>
                             <div class="card-body">
                                 <div class="container mx-1">
-                                    <h4 class="card-title">News title</h4>
-                                    <p class="card-text">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                                        in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                                        sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                                    </p>
+                                    <h3 class="card-title">
+                                        <a class="news" th:text="${news.title}" th:href="${news.url}"></a>
+                                    </h3>
+                                    <p th:text="'Source: ' + ${news.source_name}"></p>
+                                    <p class="card-text" th:text="${news.description}"></p>
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,8 @@
 package com.project.controllers;
 
+import com.project.models.News;
 import com.project.models.User;
+import com.project.services.NewsService;
 import com.project.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +26,9 @@ public class NewsController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private NewsService newsService;
 
     @Autowired
     private HomeController homeController;
@@ -48,6 +55,9 @@ public class NewsController {
         } else {
             log.info("GET request for /news");
         }
+
+        List<News> news_list = newsService.getNews("ukraine");
+        model.addAttribute("news_list", news_list);
 
         return "news";
     }
