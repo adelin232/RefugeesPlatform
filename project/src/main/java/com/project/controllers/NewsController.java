@@ -104,14 +104,14 @@ public class NewsController {
                     news.setPublish_time("Last updated " + difference_In_Days + " days, " +
                             differenceInHours + " hours, " +
                             differenceInMinutes + " minutes, " +
-                            differenceInSeconds + " seconds ago.");
+                            differenceInSeconds + " seconds ago");
                 } else if (differenceInHours != 0) {
                     news.setPublish_time("Last updated " + differenceInHours + " hours, " +
                             differenceInMinutes + " minutes, " +
-                            differenceInSeconds + " seconds ago.");
+                            differenceInSeconds + " seconds ago");
                 } else {
                     news.setPublish_time("Last updated " + differenceInMinutes + " minutes, " +
-                            differenceInSeconds + " seconds ago.");
+                            differenceInSeconds + " seconds ago");
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

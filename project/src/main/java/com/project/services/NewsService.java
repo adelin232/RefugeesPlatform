@@ -18,8 +18,8 @@ public class NewsService {
 
     private static final String[] sources = {"bbc-news", "cnn", "cbs-news", "google-news", "the-washington-post", "the-huffington-post", "independent"};
 
-    private static final String api_key = "28af95936b6e49b282989b1382346c28";
-    //private static final String api_key = "d5d4f81c17444ab69afb8018718729e6";
+//    private static final String api_key = "28af95936b6e49b282989b1382346c28";
+    private static final String api_key = "d5d4f81c17444ab69afb8018718729e6";
 
     @Getter
     @Setter
