@@ -58,6 +58,18 @@ workflows:
       - test-spring:
           requires:
             - test-docker
+      - deploy-approval:
+          type: approval
+          requires:
+            - test-spring
+          filters:
+            branches:
+              only:
+                - main
       - deploy:
           requires:
-           - test-spring
+            - deploy-approval
+          filters:
+            branches:
+              only:
+                - main
