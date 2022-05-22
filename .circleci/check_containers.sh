@@ -95,7 +95,7 @@ do
             # Check loki
             if [ "$name" == "loki" ]
             then
-                if [ $(curl http://localhost:3100/ready 2>&1 | grep "ready") == "ready\n" ]
+                if [ $(curl http://localhost:3100/ready 2> /dev/null) == "ready\n" ]
                 then
                     printf "%-40s %s\n" "      - Loki is ready" "${RED}x${NORMAL}"
                     err=-1

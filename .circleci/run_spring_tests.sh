@@ -12,6 +12,7 @@ mkdir -p /tmp/test-logs/spring-tests
 err=0
 
 # Check if containers are up
+printf "Waiting for containers...\n"
 while [ $(./.circleci/check_containers.sh --no-sleep > /dev/null) ]
 do
     sleep 1
