@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  test:
+  build:
     machine: true
     resource_class: medium
     steps:
@@ -12,6 +12,11 @@ jobs:
       - run:
           name: "Check containers"
           command: ./.circleci/check_containers.sh
+  test:
+    machine: true
+    resource_class: medium
+    steps:
+      - checkout  
       - run:
           name: "Run spring tests"
           command: ./.circleci/run_spring_tests.sh
@@ -25,4 +30,5 @@ jobs:
 workflows:
   main-workflow:
     jobs:
+      - build
       - test

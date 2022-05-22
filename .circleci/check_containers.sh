@@ -29,9 +29,12 @@ GRAFANA_DOCKER_PORT=$(cat .env | grep "GRAFANA_DOCKER_PORT" | cut -d "=" -f2 | t
 mkdir -p /tmp/test-logs/containers
 
 # Sleep for 30 seconds
-echo ""
-echo "Sleeping for 30 seconds..."
-sleep 30
+if ! [ "$1" == "--no-sleep" ];
+then
+    echo ""
+    echo "Sleeping for 30 seconds..."
+    sleep 30
+fi
 
 # Set error variable
 err=0
@@ -86,6 +89,18 @@ do
                     err=-1
                 else
                     printf "%-40s %s\n" "      - Portainer interface is up" "${GREEN}✓${NORMAL}"
+                fi
+            fi
+
+            # Check loki
+            if [ "$name" == "loki" ]
+            then
+                if [ $(curl http://localhost:3100/ready 2>&1 | grep "ready") == "ready\n" ]
+                then
+                    printf "%-40s %s\n" "      - Loki is ready" "${RED}x${NORMAL}"
+                    err=-1
+                else
+                    printf "%-40s %s\n" "      - Loki is ready" "${GREEN}✓${NORMAL}"
                 fi
             fi
 
@@ -159,6 +174,7 @@ do
                     printf "%-40s %s\n" "      - Spring website is up" "${GREEN}✓${NORMAL}"
                 fi
             fi
+            
         else
             printf "%-40s %s\n" "      - Status: $STATUS" "${RED}x${NORMAL}"
             err=-1
