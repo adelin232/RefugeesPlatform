@@ -29,7 +29,7 @@ mapfile -t proxy_address < <(cat .env | grep "PROXY_ADDRESS" | cut -d "=" -f2)
 # add proxy names to /etc/hosts
 for _file in /etc/hosts; do
     for _proxy in ${proxy_address[@]}; do
-        if ! grep -qF '127.0.0.1        $_proxy' $_file; then
+        if ! grep -qF "127.0.0.1        $_proxy" $_file; then
             sudo echo "127.0.0.1        $_proxy" >> $_file
         fi
     done
