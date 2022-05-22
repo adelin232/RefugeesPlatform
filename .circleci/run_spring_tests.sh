@@ -11,6 +11,12 @@ mkdir -p /tmp/test-logs/spring-tests
 # Set error variable
 err=0
 
+# Check if containers are up
+while [ $(./.circleci/check_containers.sh --no-sleep > /dev/null) ]
+do
+    sleep 1
+done
+
 # Run tests
 echo "Running spring tests..."
 docker exec spring-app mvn test > /tmp/test-logs/spring-tests/test.log

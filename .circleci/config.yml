@@ -6,27 +6,26 @@ jobs:
     resource_class: medium
     steps:
       - checkout  
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: "Start containers"
           command: sudo ./script.sh
       - run:
           name: "Check containers"
           command: ./.circleci/check_containers.sh
-
-  test-docker:
-    machine: true
-    resource_class: medium
-    steps:
-      - checkout  
-      - run:
-          name: "Check containers"
-          command: ./.circleci/check_containers.sh
+      - store_artifacts:
+          path: /tmp/test-logs/
+          destination: test-logs/
 
   test-spring:
     machine: true
     resource_class: medium
     steps:
       - checkout  
+      - run:
+          name: "Start containers"
+          command: sudo ./script.sh
       - run:
           name: "Run spring tests"
           command: ./.circleci/run_spring_tests.sh
@@ -52,12 +51,9 @@ workflows:
   build-test-deploy:
     jobs:
       - build
-      - test-docker:
-          requires:
-            - build
       - test-spring:
           requires:
-            - test-docker
+            - build
       - deploy-approval:
           type: approval
           requires:

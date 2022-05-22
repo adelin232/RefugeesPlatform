@@ -21,7 +21,7 @@ then
 fi
 
 # start new containers
-docker-compose up --force-recreate --detach --build
+docker-compose up --detach
 
 # get proxy names
 mapfile -t proxy_address < <(cat .env | grep "PROXY_ADDRESS" | cut -d "=" -f2)
