@@ -48,15 +48,16 @@ jobs:
 
 
 workflows:
+  version: 2
   build-test-deploy:
     jobs:
       - build
       - test-docker:
-        requires:
-          - build
+          requires:
+            - build
       - test-spring:
-        requires:
-          - test-docker
+          requires:
+            - test-docker
       - deploy:
-        requires:
-          - test-spring
+          requires:
+           - test-spring
