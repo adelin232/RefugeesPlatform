@@ -12,7 +12,17 @@ jobs:
       - run:
           name: "Check containers"
           command: ./.circleci/check_containers.sh
-  test:
+
+  test-docker:
+    machine: true
+    resource_class: medium
+    steps:
+      - checkout  
+      - run:
+          name: "Check containers"
+          command: ./.circleci/check_containers.sh
+
+  test-spring:
     machine: true
     resource_class: medium
     steps:
@@ -26,9 +36,27 @@ jobs:
       - store_test_results:
           path: ./project/test-results/
           destination: test-results/
+  
+  deploy:
+    machine: true
+    resource_class: medium
+    steps:
+      - checkout  
+      - run:
+          name: "Deploy"
+          command: echo "Deploying..."
+
 
 workflows:
-  main-workflow:
+  build-test-deploy:
     jobs:
       - build
-      - test
+      - test-docker:
+        requires:
+          - build
+      - test-spring:
+        requires:
+          - test-docker
+      - deploy:
+        requires:
+          - test-spring
