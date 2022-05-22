@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -243,8 +242,7 @@ public class RoomController {
                     return "redirect:index";
                 } else {
                     log.info("POST request for /my_room from " + user.getId());
-                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                            .withResolverStyle(ResolverStyle.STRICT);
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     DateValidator validator = new DateValidatorUsingDateTimeFormatter(dateFormatter);
 
                     if (!validator.isValid(rentalForm.getStartDate()) || !validator.isValid(rentalForm.getEndDate()) ||
